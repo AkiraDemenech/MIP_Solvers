@@ -73,7 +73,6 @@ def read_mess (file, prefix = 'CFLP'):
 
 		lines = [k.strip() for k in ln.split(';') if len(k) > 0 and not k.isspace()] 							
 		
-		
 
 		for ln in lines:
 
