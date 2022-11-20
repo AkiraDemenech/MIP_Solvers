@@ -11,7 +11,6 @@
 
 \end{abstract}
 
-
 \section{Modelagem dos problemas}
 
 	Consideramos dois casos do problema de localização de facilidades com capacidade limitada 
@@ -31,9 +30,20 @@
 	$x_{ij}$ indica se a facilidade $i \in I$ atenderá a demanda do cliente $j \in J$.
 	A variável binária $y_i$ indica se a facilidade $i \in I$ será aberta ou não.
 	
+	São aplicadas as restrições de capacidade das facilidades \ref{ss:const:capacity} e de satisfação da demanda \ref{ss:const:demand}.
 	
 	\begin{equation}
-		
+		\label{ss:const:capacity}		
+		\sum_{j \in J} x_{ij} p_{ij} \le y_i c 
+		\;
+		\forall i \in I
 	\end{equation}	
+
+	\begin{equation}
+		\label{ss:const:demand}		
+		\sum_{i \in I} x_{ij} \ge 1 
+		\;
+		\forall j \in J
+	\end{equation}
 
 \end{document}
