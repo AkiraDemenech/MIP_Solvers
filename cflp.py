@@ -124,13 +124,23 @@ def read_mess (file, prefix = 'CFLP'):
 
 	cflp += pulp.lpSum(c[j][i] * x[i][j] for i in I for j in J) + pulp.lpSum(f[i] * y[i] for i in I)
 
-	for a, b in data['INCOMPATIBLEPAIRS']:
-		a -= 1
-		b -= 1
-		for i in I: # disjunções 
-			disj = pulp.LpVariable(f'disj_{a},{b}_{i}', cat=pulp.LpBinary)
-			cflp += x[i][a] <= disj * d[j]
-			cflp += x[i][b] <= (1 - disj) * d[j]
+	for incompatible in data['INCOMPATIBLEPAIRS']: # Gamma
+
+		disjunc = {i: [] for i in I}
+
+		for j in incompatible:
+			j -= 1
+		
+			for i in I: 
+				big = pulp.LpVariable(f'bigM_{i}_{j}', cat=pulp.LpBinary)
+				disjunc[i].append(big)
+				cflp += x[i][j] <= min(s[i], d[j]) * big  
+
+		for i in disjunc: # disjunções 		
+			cflp += pulp.lpSum(disjunc[i]) <= len(disjunc[i]) - 1
+
+
+				
 
 	return cflp, x, y
 	

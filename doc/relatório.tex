@@ -1,4 +1,5 @@
 \documentclass[]{article}
+\usepackage{amsfonts} 
 
 %opening
 \title{}
@@ -21,7 +22,7 @@
 	\subsection{Problema de localização de facilidades com capacidade limitada e fonte única}
 	% http://old.math.nsc.ru/AP/benchmarks/CFLP/cflp-eng.html
 	
-	No caso de fonte única, a limitação de capacidade é um valor só $c$ fixado para todas as facilidades.
+	No caso de fonte única, a limitação de capacidade é um valor só $s$ fixado para todas as facilidades.
 	O custo fixo $f$ de abertura também é o mesmo para todas.
 	O conjunto de facilidades é dado por $I$ e o de clientes por $J$.
 	A formulação adotada traz a demanda $p_{ij}$ do cliente $j \in J$ se for atendido pela facilidade $i \in I$, 
@@ -34,7 +35,7 @@
 	
 	\begin{equation}
 		\label{ss:const:capacity}		
-		\sum_{j \in J} x_{ij} p_{ij} \le y_i c 
+		\sum_{j \in J} x_{ij} p_{ij} \le y_i s 
 		\quad
 		\forall i \in I
 	\end{equation}	
@@ -46,11 +47,11 @@
 		\forall j \in J
 	\end{equation}
 
-	As variáveis devem ser binárias (\ref{ss:const:binary}) 
+	As variáveis devem ser binárias (\ref{ss:const:dom}) 
 	e o objetivo é minimizar os custos de abertura e transporte (\ref{ss:obj}).
 	
 	\begin{equation}
-		\label{ss:const:binary}		
+		\label{ss:const:dom}		
 		x_{ij}, y_i \in \{0, 1\}
 		\quad
 		\forall i \in I, j \in J
@@ -61,6 +62,55 @@
 		\min \sum_{i \in I} 
 		(
 			f y_i + \sum_{j \in J} g_{ij} x_{ij}
+		)
+	\end{equation}
+
+	A relaxação linear das variáveis $x$ (da forma $x_{ij} \in [0,1]$) transformaria esse caso em um problema com múltiplas fontes, 
+	o modelo, porém, se tornaria bastante estranho:  
+	demandas $p_{ij}$ diferentes poderiam ser parcialmente atendidas, satisfazendo uma demanda mista não-planejada.
+	
+	\subsection{Problema de localização de facilidades com capacidade limitada e múltiplas fontes}
+	% https://link.springer.com/article/10.1007/s00500-022-07600-z 
+	
+	No caso de fontes múltiplas, para o conjunto de facilidades $I$ e de clientes $J$, 
+	a capacidade $s_i$ e o custo fixo de abertura $f_i$ não são necessariamente os mesmos para todas as facilidades $i \in I$, 
+	enquanto a demanda $d_j$ do cliente $j \in J$ é a mesma
+	independente de qual (ou quais) facilidade(s) a satisfaça(m). 
+	O custo de transporte $c_{ij}$, por unidade, da facilidade $i \in I$ para o cliente $j \in J$ existe para todos os pares.
+	No modelo utilizado, é introduzido o conjunto $\Gamma$ de pares de clientes incompatíveis $\langle i_1, i_2 \rangle \in \Gamma$
+	
+	Da mesma forma que o caso anterior, são aplicadas as restrições de capacidade das facilidades (\ref{ms:const:capacity}) e de satisfação da demanda (\ref{ms:const:demand}).
+	
+	\begin{equation}
+		\label{ms:const:capacity}		
+		\sum_{j \in J} x_{ij} d_{j} \le y_i s_i 
+		\quad
+		\forall i \in I
+	\end{equation}	
+	
+	\begin{equation}
+		\label{ms:const:demand}		
+		\sum_{i \in I} x_{ij} \ge 1 
+		\quad
+		\forall j \in J
+	\end{equation}
+	
+	As variáveis de abertura devem novamente ser binárias, enquanto o atendimento deve ser real (\ref{ms:const:dom}) 
+	e o objetivo é minimizar os custos de abertura e transporte (\ref{ms:obj}).
+	
+	\begin{equation}
+		\label{ms:const:dom}		
+		y_i \in \{0, 1\}, 
+		x_{ij} \ge 0, x_{ij} \in \mathbb{R}
+		\quad
+		\forall i \in I, j \in J		
+	\end{equation}	
+	
+	\begin{equation}
+		\label{ms:obj}		
+		\min \sum_{i \in I} 
+		(
+		f y_i + \sum_{j \in J} g_{ij} x_{ij}
 		)
 	\end{equation}
 
