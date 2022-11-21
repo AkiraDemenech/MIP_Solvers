@@ -30,20 +30,38 @@
 	$x_{ij}$ indica se a facilidade $i \in I$ atenderá a demanda do cliente $j \in J$.
 	A variável binária $y_i$ indica se a facilidade $i \in I$ será aberta ou não.
 	
-	São aplicadas as restrições de capacidade das facilidades \ref{ss:const:capacity} e de satisfação da demanda \ref{ss:const:demand}.
+	São aplicadas as restrições de capacidade das facilidades (\ref{ss:const:capacity}) e de satisfação da demanda (\ref{ss:const:demand}).
 	
 	\begin{equation}
 		\label{ss:const:capacity}		
 		\sum_{j \in J} x_{ij} p_{ij} \le y_i c 
-		\;
+		\quad
 		\forall i \in I
 	\end{equation}	
 
 	\begin{equation}
 		\label{ss:const:demand}		
 		\sum_{i \in I} x_{ij} \ge 1 
-		\;
+		\quad
 		\forall j \in J
+	\end{equation}
+
+	As variáveis devem ser binárias (\ref{ss:const:binary}) 
+	e o objetivo é minimizar os custos de abertura e transporte (\ref{ss:obj}).
+	
+	\begin{equation}
+		\label{ss:const:binary}		
+		x_{ij}, y_i \in \{0, 1\}
+		\quad
+		\forall i \in I, j \in J
+	\end{equation}	
+	
+	\begin{equation}
+		\label{ss:obj}		
+		\min \sum_{i \in I} 
+		(
+			f y_i + \sum_{j \in J} g_{ij} x_{ij}
+		)
 	\end{equation}
 
 \end{document}
