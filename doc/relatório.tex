@@ -28,8 +28,9 @@
 	A formulação adotada traz a demanda $p_{ij}$ do cliente $j \in J$ se for atendido pela facilidade $i \in I$, 
 	sendo possível que o cliente $j$ não possa ser atendido pela facilidade $i$.
 	O custo de transporte $g_{ij}$ da facilidade $i \in I$ para o cliente $j \in J$ é referente à toda a demanda, não ao transporte de cada unidade (ou medida) requerida.
-	$x_{ij}$ indica se a facilidade $i \in I$ atenderá a demanda do cliente $j \in J$.
-	A variável binária $y_i$ indica se a facilidade $i \in I$ será aberta ou não.
+	
+	$x_{ij}$ indica se a facilidade $i \in I$ atenderá a demanda do cliente $j \in J$ 
+	e a variável binária $y_i$ indica se a facilidade $i \in I$ será aberta ou não.
 	
 	São aplicadas as restrições de capacidade das facilidades (\ref{ss:const:capacity}) e de satisfação da demanda (\ref{ss:const:demand}).
 	
@@ -77,41 +78,88 @@
 	enquanto a demanda $d_j$ do cliente $j \in J$ é a mesma
 	independente de qual (ou quais) facilidade(s) a satisfaça(m). 
 	O custo de transporte $c_{ij}$, por unidade, da facilidade $i \in I$ para o cliente $j \in J$ existe para todos os pares.
-	No modelo utilizado, é introduzido o conjunto $\Gamma$ de pares de clientes incompatíveis $\langle i_1, i_2 \rangle \in \Gamma$
+	
+	No modelo utilizado, é introduzido o conjunto $\Gamma \subseteq J^2$ de pares incompatíveis $\{ j_1, j_2 \} \in \Gamma$, 
+	nos quais os clientes $j_1, j_2 \in J$ não podem ser atendidos simultaneamente por uma mesma facilidade $i \in I$.
+	
+	Nesse caso, $x_{ij}$ indica quantas unidades a facilidade $i \in I$ suprirá ao cliente $j \in J$ 
+	e, novamente, a variável binária $y_i$ indica se a facilidade $i \in I$ será aberta ou não.
+	
+	A disjunção dos pares de clientes incompatíveis pode ser perfeitamente formulada pela técnica \textit{big M} (\ref{ms:const:incomp}), 
+	uma vez que o limitante superior $s_i$ é garantido para todo $x_{ij}$.
+	
+	\begin{equation}
+		\label{ms:const:incomp}		
+		x_{ij_1} \le h_{ij_1j_2} s_i, 
+		\ x_{ij_2} \le (1 - h_{ij_1j_2}) s_i 
+		\quad
+		\forall i \in I, 
+		\ \{ j_1, j_2 \} \in \Gamma  
+	\end{equation}
 	
 	Da mesma forma que o caso anterior, são aplicadas as restrições de capacidade das facilidades (\ref{ms:const:capacity}) e de satisfação da demanda (\ref{ms:const:demand}).
 	
 	\begin{equation}
 		\label{ms:const:capacity}		
-		\sum_{j \in J} x_{ij} d_{j} \le y_i s_i 
+		\sum_{j \in J} x_{ij} \le y_i s_i 
 		\quad
 		\forall i \in I
 	\end{equation}	
 	
 	\begin{equation}
 		\label{ms:const:demand}		
-		\sum_{i \in I} x_{ij} \ge 1 
+		\sum_{i \in I} x_{ij} \ge d_j 
 		\quad
 		\forall j \in J
 	\end{equation}
 	
-	As variáveis de abertura devem novamente ser binárias, enquanto o atendimento deve ser real (\ref{ms:const:dom}) 
+	As variáveis de disjunção \textit{big M} e abertura devem novamente ser binárias, enquanto o atendimento deve ser inteiro (\ref{ms:const:dom}) 
 	e o objetivo é minimizar os custos de abertura e transporte (\ref{ms:obj}).
 	
 	\begin{equation}
 		\label{ms:const:dom}		
-		y_i \in \{0, 1\}, 
-		x_{ij} \ge 0, x_{ij} \in \mathbb{R}
+		y_i, h_{ij_1j_2} \in \{0, 1\}, 
+		\ x_{ij} \ge 0, 
+		\ x_{ij} \in \mathbb{Z}
 		\quad
-		\forall i \in I, j \in J		
+		\forall i \in I, j \in J, 		
+		\ \{ j_1, j_2 \} \in \Gamma
 	\end{equation}	
 	
 	\begin{equation}
 		\label{ms:obj}		
 		\min \sum_{i \in I} 
 		(
-		f y_i + \sum_{j \in J} g_{ij} x_{ij}
+		f_i y_i + \sum_{j \in J} c_{ij} x_{ij}
 		)
 	\end{equation}
+
+	Alternativamente, podemos definir as restrições de pares incompatíveis (\ref{ms:const:incomp}) para conjuntos incompatíveis $u_k \in \Gamma'$ (\ref{ms:const:incomp_alt}). 
+	Também é razoável utilizar $d_j$ como limitante superior, 
+	já que a minimização dos custos não-negativos torna a demanda do cliente $j \in J$ o máximo desejável para o atendimento $x_{ij}$ da facilidade $i \in I$.   
+	
+	\begin{equation}
+		\label{ms:const:incomp_alt}		
+		x_{ij_1} \le h_{ij_tk} d_{j_t} 
+		\quad
+		\forall i \in I, 
+		\ j_t \in u_k,
+		\ u_k = \{ j_1, j_2 ... j_n \},
+		\ u_k \in \Gamma'  
+	\end{equation}
+	
+	A disjunção seria generalizada para os conjuntos de $n$ clientes limitando a $n-1$ clientes incompatíveis $j_t \in u_k$ atendidos pela mesma facilidade $i \in I$ (\ref{ms:const:disj_incomp_alt}). 
+	
+	\begin{equation}
+		\label{ms:const:disj_incomp_alt}
+		\sum_{j_t \in u_k} h_{ij_tk} \le n - 1 
+		\quad
+		\forall i \in I, 
+		\ u_k = \{ j_1, j_2 ... j_n \},
+		\ u_k \in \Gamma'  
+	\end{equation}
+
+	Generalizamos o conjunto de conjuntos de clientes incompatíveis para $\Gamma' \subseteq \{ B / B \subseteq J \}$ e adaptamos a variável binária $h_{ij_tk} \in \{0,1\}$. 
+	 
 
 \end{document}

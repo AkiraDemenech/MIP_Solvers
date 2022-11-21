@@ -4,6 +4,12 @@ import orloge
 import sys
 import time
 
+def matrix_to_vector (M):
+	V = []
+	for ln in M:
+		V.extend(ln)
+	return V	
+
 def read_sobolev (file, prefix = 'CFLP'): 
 	
 	num = [ln for ln in [[(int if col.isdigit() else float)(col) for col in ln.strip().split() if not col.isalpha()] for ln in file if not ln.isspace()] if len(ln)]
@@ -96,16 +102,15 @@ def read_mess (file, prefix = 'CFLP'):
 
 	#print(data)		
 
-	for k in data:
-		data[k] = [ln for ln in data[k] if len(ln) > 0]
+	
 
 	prefix += '_' + file.name.split('/')[-1].split('\\')[-1].strip()	
 	cflp = pulp.LpProblem(prefix, pulp.LpMinimize)
 
-	f = data['FIXEDCOST'][0] # custo de abertura da facilidade
-	s = data['CAPACITY'][0] # capacidade das facilidades
-	d = data['GOODS'][0] # demanda dos clientes 
-	c = data['SUPPLYCOST'] # custo por unidade de facilidade para cliente
+	f = matrix_to_vector(data['FIXEDCOST']) # custo de abertura da facilidade
+	s = matrix_to_vector(data['CAPACITY']) # capacidade das facilidades
+	d = matrix_to_vector(data['GOODS']) # demanda dos clientes 
+	c = [ln for ln in data['SUPPLYCOST'] if len(ln) > 0] # custo por unidade de facilidade para cliente
 
 	I = range(len(s)) # facilidades (Warehouses)
 	J = range(len(d)) # clientes (Stores)
@@ -124,6 +129,8 @@ def read_mess (file, prefix = 'CFLP'):
 
 	cflp += pulp.lpSum(c[j][i] * x[i][j] for i in I for j in J) + pulp.lpSum(f[i] * y[i] for i in I)
 
+	k = 0
+	
 	for incompatible in data['INCOMPATIBLEPAIRS']: # Gamma
 
 		disjunc = {i: [] for i in I}
@@ -132,9 +139,11 @@ def read_mess (file, prefix = 'CFLP'):
 			j -= 1
 		
 			for i in I: 
-				big = pulp.LpVariable(f'bigM_{i}_{j}', cat=pulp.LpBinary)
+				big = pulp.LpVariable(f'bigM_{i}_{j}_{k}', cat=pulp.LpBinary)
 				disjunc[i].append(big)
-				cflp += x[i][j] <= min(s[i], d[j]) * big  
+				cflp += x[i][j] <= d[j] * big  
+
+		k += 1		
 
 		for i in disjunc: # disjunções 		
 			cflp += pulp.lpSum(disjunc[i]) <= len(disjunc[i]) - 1
