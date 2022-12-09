@@ -112,6 +112,19 @@ def read_mess (file, prefix = 'CFLP'):
 	d = matrix_to_vector(data['GOODS']) # demanda dos clientes 
 	c = [ln for ln in data['SUPPLYCOST'] if len(ln) > 0] # custo por unidade de facilidade para cliente
 
+	for ln in c:
+		if len(ln) != len(s):
+			print('Wrong line\t', ln)
+
+	'''
+	with open('instance.log', 'w') as instance_log:
+		print('Capacity =', s, file=instance_log)		
+		print('FixedCost =', f, file=instance_log)		
+		print('Goods =', d, file=instance_log)
+		print('SupplyCost =', *c, sep='\n\t', file=instance_log)
+		print('\nIncompatiblePairs =', data['INCOMPATIBLEPAIRS'], file=instance_log)
+	#	'''
+
 	I = range(len(s)) # facilidades (Warehouses)
 	J = range(len(d)) # clientes (Stores)
 
@@ -129,24 +142,34 @@ def read_mess (file, prefix = 'CFLP'):
 
 	cflp += pulp.lpSum(c[j][i] * x[i][j] for i in I for j in J) + pulp.lpSum(f[i] * y[i] for i in I)
 
-	k = 0
 	
-	for incompatible in data['INCOMPATIBLEPAIRS']: # Gamma
 
-		disjunc = {i: [] for i in I}
 
-		for j in incompatible:
-			j -= 1
+	
+	#print(data['INCOMPATIBLEPAIRS'])
+	k = 0
+	for p in data['INCOMPATIBLEPAIRS']:
+		if len(p) != 2:
+			if len(p):
+				print('Wrong incompatible pair:\t',p)	
+
+			if len(p) <= 1:	
+				print('Incompatibility',p,'ignored.')
+				continue
+
+		disj = {}			
+		for j in p:
+			j -= 1 # índice deve começar em 0
+			for i in I:				 
+				disj[j,i] = pulp.LpVariable(f'disj_{i}_{j}_{k}', cat=pulp.LpBinary)
+				cflp += x[i][j] <= d[j] * disj[j, i] 
+		for i in I:
+			cflp += pulp.lpSum(disj[j - 1, i] for j in p) <= len(p) - 1		
+
+		k += 1
 		
-			for i in I: 
-				big = pulp.LpVariable(f'bigM_{i}_{j}_{k}', cat=pulp.LpBinary)
-				disjunc[i].append(big)
-				cflp += x[i][j] <= d[j] * big  
 
-		k += 1		
 
-		for i in disjunc: # disjunções 		
-			cflp += pulp.lpSum(disjunc[i]) <= len(disjunc[i]) - 1
 
 
 				
@@ -170,38 +193,49 @@ def problems (cap = {10, 20, 30, 40, 50}, code = range(1, 1 + 20)):
 	for ca in cap:
 		ilp[ca] = {}
 		for co in code:
-			ilp[ca][co] = read(open(f'cap/{ca}/{co}Cap{ca}.txt','r'), open(f'Cap{ca}_{co}.py','w'))
+			ilp[ca][co] = read_sobolev(open(f'cap/{ca}/{co}Cap{ca}.txt','r'), open(f'Cap{ca}_{co}.py','w'))
 	return ilp		
 
-def solve (read, input, output=sys.stdout):
+def solve (read, input, outdir='', output=sys.stdout, time_limit = None):
 #	instances = problems()			
 	file_name = input.split('/')[-1].split('\\')[-1]
 	file_extension = file_name.split('.')[-1]
-	print('\n',input,'\t',file_name)
+	print('\n',input,'\t',file_name,'\t',time_limit)
 	
 	
 	
-	print('Instance file:\t',input, '\nExtension:\t',file_extension.lower(), file=output)
+	
+	print('Instance file:\t',input, '\nExtension:\t',file_extension.upper(), '\nTime limit:\t', time_limit, file=output)
 	
 	
 		
 	instance, x, y = read(open(input,'r'))
+
+	#print(instance)
+	instance_name = file_name
+	if len(outdir) > 0 and not outdir.isspace():
+		file_name = outdir + file_name
+	if time_limit:
+		file_name += f'({time_limit})'
 	
 	solvers = {
-		'gurobi': pulp.GUROBI_CMD(logPath=file_name + '.gurobi.sol.log', msg=False), 
-		'cplex': pulp.CPLEX_CMD(logPath=file_name + '.cplex.sol.log', msg=False), 		
-		'scip': pulp.SCIP_CMD(options=['-l', './' + file_name + '.scip.sol.log'], msg=False, path=r'C:/Program Files/SCIPOptSuite 8.0.1/bin/scip.exe'), # colocar o caminho exato do SCIP no dispositivo que for executar 
-		'pulp_cbc': pulp.PULP_CBC_CMD(logPath= file_name + '.pulp_cbc.sol.log', msg=False) # CBC precisa ser a parte final do nome do solver no dicionário e no log, sendo separado dos termos anteriores por _ ou -  
+		'gurobi': pulp.GUROBI_CMD(logPath=file_name + '.gurobi.sol.log', msg=False, timeLimit=time_limit), 
+		'cplex': pulp.CPLEX_CMD(logPath=file_name + '.cplex.sol.log', msg=False, timeLimit=time_limit), 		
+		'scip': pulp.SCIP_CMD(options=['-l', './' + file_name + '.scip.sol.log'], msg=False, timeLimit=time_limit, path=r'C:/Program Files/SCIPOptSuite 8.0.1/bin/scip.exe'), # colocar o caminho exato do SCIP no dispositivo que for executar 
+		'pulp_cbc': pulp.PULP_CBC_CMD(logPath= file_name + '.pulp_cbc.sol.log', msg=False, timeLimit=time_limit) # CBC precisa ser a parte final do nome do solver no dicionário e no log, sendo separado dos termos anteriores por _ ou -  
 	}
 	solver_logs = {}
 		
 	for s in solvers:
 		file_log = file_name + '.' + s + '.res.log'
 		solver_log = file_name + '.' + s + '.sol.log'
+		solution_list = file_name + '.' + s + '.list.log'
+		solution_matrix = file_name + '.' + s + '.matrix.log'
 		sl = solver_logs[s] = {}
 		print('\n\t',s)
 		print('\n[%02d/%02d/%02d' %time.localtime()[:3][::-1], '%02d:%02d:%02d]\t' %time.localtime()[3:6],s.upper(), 'at', file_log, file=output)
 		log = open(file_log,'w')
+		
 		
 		
 		ti = time.time_ns()
@@ -222,15 +256,15 @@ def solve (read, input, output=sys.stdout):
 		facilities.sort()
 		
 		print('\t',dt,pdt,instance.solutionTime,instance.solutionCpuTime,'\n\t',pulp.value(instance.objective), pulp.LpStatus[res],'\t',facilities)
-		print(f'Facilities ({len(facilities)}):\t', facilities, '\nFacilities: assigned clients', file=output)			
+		print(f'Facilities ({len(facilities)}):\t', facilities, '\n\tFacilities: assigned clients', file=output)			
 		print(str(facilities).replace('[',f'Selected facilities ({len(facilities)}):\t').replace(']','\nFacilities: assigned clients'), file=log) 
 		
 		
 		clients = {}
 		supply = {}
 		for i in facilities:
-			print(' ',i,end=f' ({pulp.value(y[i])}) :\t',file=output)
-			print(' ',i,end=f' ({pulp.value(y[i])}) :\t',file=log)
+			print('\t ',i,end=f' ({pulp.value(y[i])}) :\t',file=output)
+			print(' ', i, end=f' ({pulp.value(y[i])}) :\t',file=log)
 			c = []
 			supply[i] = c
 			for j in x[i]:
@@ -246,33 +280,57 @@ def solve (read, input, output=sys.stdout):
 		J = list(clients)
 		J.sort()
 		print('\nClients: assigned facilities', file=log)
-		print('\nClients: assigned facilities', file=output)
+		print('\n\tClients: assigned facilities', file=output)
 		for j in J:			
 			clients[j].sort()
-			print(' ',j,': \t',clients[j], file=output)
+			print('\t ',j,': \t',clients[j], file=output)
 			print(str(clients[j]).replace('[',f' {j}: \t').replace(']',''), file=log)
 
 		print('\nClients supply details:', file=log)
-		print('\nClients supply details:', file=output)
+		print('\n\tClients supply details:', file=output)
 
 		for j in J:			
-			print(' ',j,':',file=output)
+			print('\t ',j,':',file=output)
 			print(f' {j}: ',file=log)
 
 			for i in clients[j]:
 				print(f'  {i}: \t{pulp.value(x[i][j])}',file=log)
-				print('  ',i, ': \t', pulp.value(x[i][j]), file=output)
+				print('\t  ',i, ': \t', pulp.value(x[i][j]), file=output)
 
 		print('\nFacilities capacity details:', file=log)
-		print('\nFacilities capacity details:', file=output)
+		print('\n\tFacilities capacity details:', file=output)
 
 		for i in facilities:			
-			print(' ',i,':',file=output)
+			print('\t ',i,':',file=output)
 			print(f' {i}: ',file=log)
 
 			for j in supply[i]:
 				print(f'  {j}: \t{pulp.value(x[i][j])}',file=log)
-				print('  ',j, ': \t', pulp.value(x[i][j]), file=output)
+				print('\t  ',j, ': \t', pulp.value(x[i][j]), file=output)
+
+		print('\n', file=log)		
+		list_format = [(j + 1, i + 1, pulp.value(x[i][j]) if type(pulp.value(x[i][j])) == int or not pulp.value(x[i][j]).is_integer() else int(pulp.value(x[i][j]))) for j in x[i] for i in x if pulp.value(x[i][j])]
+		sol_list = open(solution_list,'w')
+		print(end='{', file=sol_list)
+		print(*[str(t).replace(' ', '') for t in list_format], sep=', ', end='}', file=sol_list)
+		sol_list.close()
+		print('(Client + 1, Facility + 1, Supply) list at', solution_list, file=log)
+
+		matrix_format = []
+		for i in x:
+			for j in x[i]:
+				while j >= len(matrix_format):
+					matrix_format.append([])
+				while i >= len(matrix_format[j]): 	
+					matrix_format[j].append(0)
+				matrix_format[j][i] = pulp.value(x[i][j]) if type(pulp.value(x[i][j])) == int or not pulp.value(x[i][j]).is_integer() else int(pulp.value(x[i][j]))  	
+
+		sol_matrix = open(solution_matrix,'w')
+		print(file=sol_matrix,end='[')
+		print(*[str(tuple(ln)).replace(' ','') for ln in matrix_format],file=sol_matrix,end=']',sep='\n')
+		sol_matrix.close()
+		print('(Client + 1) Supply from (Facility + 1) matrix at', solution_matrix, file=log)
+								
 
 		s = s.split('_')[-1].split('-')[-1].strip().upper()
 		print('\n' + s, 'log at',solver_log,file=log)
@@ -283,6 +341,10 @@ def solve (read, input, output=sys.stdout):
 			print(' orloge can not process\n',file=log)
 		#	continue
 
+		
+		log.close()
+		
+	print('End',file=output)
 		
 
 
@@ -330,11 +392,46 @@ def dict_log (log_dict, log=sys.stdout):
 
 
 if __name__ == '__main__':	
-	c = 2
+	
 	reading_method = file_format[sys.argv[True].upper()]
-	while c < len(sys.argv):
+	today = time.localtime()[:5]
+	folder = 'res'
+	#'''
+	import os
+	c = 0
+	d = 3
+	while True:
 		
-		solve(reading_method, sys.argv[c], open(sys.argv[c].split('\\')[-1].split('/')[-1].strip() + '.log', 'w'))
+		try:
+			os.mkdir(folder)
+		except FileExistsError:	
+			print('DirectoryExist:\t',folder)
+		except:	
+			print('Unexpected directory error')
+			folder = ''
+			break
+		else:	
+			print(folder)
+
+		folder += '/'	
 		
-		c += 1
+		if c >= 5:
+			break 
+		
+		b = c 
+		c += d
+		d -= 1
+		for a in range(b, c): 	
+			folder += ('_' * (b != a)) + ('%02d' %today[a])
+	#'''		
+
+	
+	folder += '/' * (len(folder) > 0 and not folder[-1] in '/\\')
+	
+	print(reading_method)
+	solve(reading_method, sys.argv[2], folder, open(folder + sys.argv[2].split('\\')[-1].split('/')[-1].strip() + ('' if len(sys.argv) <= 3 else '('+sys.argv[3]+')') + '.log', 'w'), None if len(sys.argv) <= 3 else int(sys.argv[3]))
+		
+		
+		
+		
 		
