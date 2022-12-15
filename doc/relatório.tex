@@ -91,8 +91,8 @@
 	
 	\begin{equation}
 		\label{ms:const:incomp}		
-		x_{ij_1} \le h_{ij_1j_2} s_i, 
-		\ x_{ij_2} \le (1 - h_{ij_1j_2}) s_i 
+		x_{ij_1} \le \lambda_{ij_1j_2} s_i, 
+		\ x_{ij_2} \le (1 - \lambda_{ij_1j_2}) s_i 
 		\quad
 		\forall i \in I, 
 		\ \{ j_1, j_2 \} \in \Gamma  
@@ -119,7 +119,7 @@
 	
 	\begin{equation}
 		\label{ms:const:dom}		
-		y_i, h_{ij_1j_2} \in \{0, 1\}, 
+		y_i, \lambda_{ij_1j_2} \in \{0, 1\}, 
 		\ x_{ij} \ge 0, 
 		\ x_{ij} \in \mathbb{Z}
 		\quad
@@ -141,7 +141,7 @@
 	
 	\begin{equation}
 		\label{ms:const:incomp_alt}		
-		x_{ij_1} \le h_{ij_tk} d_{j_t} 
+		x_{ij_1} \le \lambda_{ij_tk} d_{j_t} 
 		\quad
 		\forall i \in I, 
 		\ j_t \in u_k,
@@ -153,14 +153,14 @@
 	
 	\begin{equation}
 		\label{ms:const:disj_incomp_alt}
-		\sum_{j_t \in u_k} h_{ij_tk} \le n - 1 
+		\sum_{j_t \in u_k} \lambda_{ij_tk} \le n - 1 
 		\quad
 		\forall i \in I, 
 		\ u_k = \{ j_1, j_2 ... j_n \},
 		\ u_k \in \Gamma'  
 	\end{equation}
 
-	Generalizamos o conjunto de conjuntos de clientes incompatíveis para $\Gamma' \subseteq \{ B / B \subseteq J \}$ e adaptamos a variável binária $h_{ij_tk} \in \{0,1\}$. 
+	Generalizamos o conjunto de conjuntos de clientes incompatíveis para $\Gamma' \subseteq \{ B / B \subseteq J \}$ e adaptamos a variável binária $\lambda_{ij_tk} \in \{0,1\}$. 
 	 
 
 \end{document}

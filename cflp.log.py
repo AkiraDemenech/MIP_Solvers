@@ -1,8 +1,9 @@
 import orloge
 import csv
+import os 
 
 solvers = 'pulp_cbc', 'cplex', 'gurobi'
-cut_name = {'gurobi': {
+cut_name = {'GUROBI': {
 		'Clique':	'CLIQUE',
 		'Cover':	'COVER',
 		'Flow cover':	'FLOW',
@@ -14,7 +15,7 @@ cut_name = {'gurobi': {
 		'Mod-K':	'OUTROS',#'MOD_K',
 		'RLT':	'OUTROS',#'RLT',
 		'Relax-and-lift':	'OUTROS'#'RELAX_LIFT'
-	}, 'cplex': {
+	}, 'CPLEX': {
 		'Clique':	'CLIQUE',
 		'Cover':	'COVER',
 		'Flow':	'FLOW',
@@ -22,27 +23,28 @@ cut_name = {'gurobi': {
 		'Mixed integer rounding':	'MIR',
 		'Zero-half': 'ZERO_HALF',
 		'Lift and project':	'OUTROS'#'LIFT_PROJECT'	
-	}, 'cbc': {}
+	}, 'CBC': {}
 }
 
 table = csv.writer(open('cflp.log.csv', 'w', encoding='UTF-8'), delimiter=';', quotechar="'")
 concat = lambda v, p = '', sep = '': concat(v[1:], p + sep + v[0], '_') if len(v) else p
-cols = [['capacity'],['code'],['solver'], 
+cols = [['instance_source_file_name'],['solver'], ['time_limit'],
 	['time'], #['rootTime'], 
 	
 	
 	['matrix','constraints'], 
 	['matrix','variables'], 
-	['matrix','nonzeros'],	# estranho 
+	['matrix','nonzeros'],	 
 	
 	['matrix_post','constraints'],
 	['matrix_post','variables'],
-	['matrix_post','nonzeros'], # estranho
+	['matrix_post','nonzeros'], 
 
 	['best_solution'],
 	['best_bound'],
+	['gap'],
 	['nodes'], # importante 
-	#['first_relaxed'], ['first_solution', 'BestInteger'], ['first_solution', 'CutsBestBound'], 
+	['first_relaxed'], ['first_solution', 'BestInteger'], ['first_solution', 'CutsBestBound'], 
 
 	['cut_info', 'best_bound'],
 	['cut_info', 'best_solution'],
@@ -54,34 +56,48 @@ cols = [['capacity'],['code'],['solver'],
 
 
 
+dir = 'res'
+files = [a for a in os.listdir(dir) if a.endswith('.sol.log')]
+files.sort()
 logs = []
 cuts = {}
 
-for cap in 10,20,30,40,50:
-	print('\n\n',cap,end='')
-	for cod in range(1,1 + 20):
-		print('\n',cod,end='\t')
-		for s in solvers:			
-			log_file = f'resol/{cod}Cap{cap}.txt.{s}.sol.log'
-			solver = s.split('_')[-1].upper()
-			print('\t',end=solver)
-			log = orloge.get_info_solver(log_file, solver)
-			logs.append(log)
-			log['code'] = cod
-			log['capacity'] = cap
-			
-			#print(log['cut_info'])
-			if 'cuts' in log['cut_info']:
-				for c in log['cut_info']['cuts']:	
+last_index = lambda string, substring, prev_index=-1: prev_index if string.find(substring,prev_index+1) < 0 else last_index(string, substring, string.find(substring, prev_index + 1))
 
-					if not cut_name[s][c] in log['cut_info']:
-						log['cut_info'][cut_name[s][c]] = 0
+for log_file in files:
+	div = log_file.split('.')
+	sol = div[-3]
+	time_limit = div[-4].split('(')[-1].split(')')[0]
+	
+	file_name = log_file[:last_index(log_file,'(')]
+	print(time_limit,'\t',sol,'\t',file_name)
+	#log_file = f'resol/{cod}Cap{cap}.txt.{s}.sol.log'
+	solver = sol.split('_')[-1].upper()
+	if not solver in cut_name:
+		continue 
+	#print('\t',end=solver)
+	log = orloge.get_info_solver(dir + '/' + log_file, solver)
+	logs.append(log)
+	log['instance_source_file_name'] = file_name
+	log['time_limit'] = time_limit#cod
+	#log['capacity'] = cap
+			
+	#print(log['cut_info'])
+	if log['cut_info'] != None and 'cuts' in log['cut_info']:
+		for c in log['cut_info']['cuts']:	
+
+			if not c in cut_name[solver]:
+				cut_name[solver][c] = c.upper().replace('\t',' ').replace(' ','_')
+				print(solver,'Cut',c,'included!')
+			
+			if not cut_name[solver][c] in log['cut_info']:
+				log['cut_info'][cut_name[solver][c]] = 0
 					
-					log['cut_info'][cut_name[s][c]] += log['cut_info']['cuts'][c]
+			log['cut_info'][cut_name[solver][c]] += log['cut_info']['cuts'][c]
 					
-					if not c in cuts:
-						cuts[c] = set()
-					cuts[c].add(s)
+			if not c in cuts:
+				cuts[c] = set()
+			cuts[c].add(solver)
 					
 
 cuts_table = set()
@@ -99,7 +115,7 @@ print('\n')
 
 for log in logs:			
 	data = []
-	print(log['solver'], '\t', log['capacity'], log['code'])
+	print(log['solver'], '\t', log['instance_source_file_name'], log['code'])
 	for c in cols:
 		l = log
 		for c in c:			

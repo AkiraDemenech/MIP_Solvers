@@ -10,7 +10,14 @@ def matrix_to_vector (M):
 		V.extend(ln)
 	return V	
 
-def read_sobolev (file, prefix = 'CFLP'): 
+def scan (file=sys.stdin):
+	for ln in file:
+		if len(ln) > 0 and not ln.isspace():
+			for s in ln.strip().split():
+				yield s
+
+
+def read_sobolev (file, prefix = 'CFLP', single_source = True): 
 	
 	num = [ln for ln in [[(int if col.isdigit() else float)(col) for col in ln.strip().split() if not col.isalpha()] for ln in file if not ln.isspace()] if len(ln)]
 	
@@ -48,7 +55,7 @@ def read_sobolev (file, prefix = 'CFLP'):
 	y = dict((i, pulp.LpVariable(f'y_{i}', 0, 1, pulp.LpBinary)) for i in I)
 	
 	# se a facilidade i serve o cliente j
-	x = {i: {j: pulp.LpVariable(f'x_{i}_{j}', 0, 1, pulp.LpBinary) for j in J} for i in I}
+	x = {i: {j: pulp.LpVariable(f'x_{i}_{j}', 0, 1) for j in J} for i in I}
 	
 	for i in p:					
 		cflp += pulp.lpSum(x[i][j] * p[i][j] for j in p[i]) <= y[i] * fixed_capacity # a capacidade não é superada se a facilidade for aberta 				
@@ -58,11 +65,17 @@ def read_sobolev (file, prefix = 'CFLP'):
 		cflp += pulp.lpSum(x[i][j] for i in I if j in p[i] and p[i][j] > 0) >= 1	# demanda atendida por pelo menos uma fonte	(fonte única, pois os custos serão minimizados)		
 				
 	
+	if single_source:
+		print('Single source version')
+		for i in x:
+			for j in x[i]:
+				cflp += x[i][j] == pulp.LpVariable(f'b_{i}_{j}', cat=pulp.LpBinary)
+
 	cflp += pulp.lpSum(fixed_cost * y[i] + pulp.lpSum(g[i][j] * x[i][j] for j in g[i]) for i in I) # função objetivo: minimizar os custos fixos das facilidades abertas e os custos de transporte para os clientes atendidos		
 	
 	return cflp, x, y
 			
-def read_mess (file, prefix = 'CFLP'):		
+def read_mess (file, prefix = 'CFLP', single_source = False):		
 
 	data = {
 			'Capacity'.upper(): [[]],
@@ -168,24 +181,89 @@ def read_mess (file, prefix = 'CFLP'):
 
 		k += 1
 		
-
-
-
+	if single_source:
+		print('Single source version')
+		for i in I:
+			for j in J:
+				cflp += x[i][j] == d[j] * pulp.LpVariable(f'b_{i}_{j}', cat=pulp.LpBinary)  
 
 				
 
 	return cflp, x, y
 	
+def read_beasley (file, prefix = 'CFLP', single_source = False):
 
+	 
+
+				
+	prefix += '_' + file.name.split('/')[-1].split('\\')[-1].strip()	
+	cflp = pulp.LpProblem(prefix, pulp.LpMinimize)
+
+	input = scan(file)			
+	m = int(next(input)) # facilidades			
+	n = int(next(input)) # clientes 
+
+	I = range(1, 1 + m) 
+	J = range(1, 1 + n)
+
+	f = {} # custo fixo da facilidade
+	s = {} # capacidade da facilidade
+	d = {} # demanda do cliente 
+	c = {} # custo de suprir toda a demanda 
+
+	
+	x = {} # se/quanto o cliente será suprido 
+	y = {} # se a facilidade está aberta 
+
+	for i in I:
+		s[i] = float(next(input))
+		f[i] = float(next(input))
 
 				
 				
+		y[i] = pulp.LpVariable(f'y_{i}', cat=pulp.LpBinary)
+		x[i] = {}
+		c[i] = {}
+		
+
+	for j in J:
+		d[j] = float(next(input))	
+	for j in J:	
+		for i in I:
+			c[i][j] = float(next(input))
+			x[i][j] = pulp.LpVariable(f'x_{i}_{j}', 0, cat=pulp.LpInteger)
+
+	for i in I: # respeita as capacidades das facilidades abertas
+		cflp += pulp.lpSum(x[i][j] for j in J) <= y[i] * s[i]
+
+	for j in J:	# satisfaz as demandas  
+		cflp += pulp.lpSum(x[i][j] for i in I) >= d[j]
+
+	if single_source:	
+		print('Single source version')
+		for i in I:
+			for j in J:
+				cflp += pulp.LpVariable(f'b_{i}_{j}', cat=pulp.LpBinary) * d[j] == x[i][j]
 
 	
+
+	cflp += pulp.lpSum(c[i][j] * x[i][j] / d[j] for i in I for j in J) + pulp.lpSum(f[i] * y[i] for i in I)
+	
+	#'''
+	with open('istanze.log', 'w') as instance_log:
+		print('Capacity/FixedCost =', {i:(s[i], f[i]) for i in I}, file=instance_log)		
+				
+		print('Goods =', d, file=instance_log)
+		print('TotalSupplyCost =', {(j,i): c[i][j] for i in c for j in c[i]}, sep='\n\t', file=instance_log)
+		
+		print(cflp, file=instance_log)
+	#'''
+
+	return cflp, x, y
 	
 	
 	
-file_format = {'SOBOLEV': read_sobolev, 'MESS': read_mess}	
+file_format = {'SOBOLEV': read_sobolev, 'BEASLEY': read_beasley, 'MESS': read_mess}	
 	
 	
 def problems (cap = {10, 20, 30, 40, 50}, code = range(1, 1 + 20)):				
@@ -196,7 +274,7 @@ def problems (cap = {10, 20, 30, 40, 50}, code = range(1, 1 + 20)):
 			ilp[ca][co] = read_sobolev(open(f'cap/{ca}/{co}Cap{ca}.txt','r'), open(f'Cap{ca}_{co}.py','w'))
 	return ilp		
 
-def solve (read, input, outdir='', output=sys.stdout, time_limit = None):
+def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **reading_args):
 #	instances = problems()			
 	file_name = input.split('/')[-1].split('\\')[-1]
 	file_extension = file_name.split('.')[-1]
@@ -209,14 +287,13 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None):
 	
 	
 		
-	instance, x, y = read(open(input,'r'))
+	instance, x, y = read(open(input,'r'), **reading_args)
 
 	#print(instance)
 	instance_name = file_name
 	if len(outdir) > 0 and not outdir.isspace():
 		file_name = outdir + file_name
-	if time_limit:
-		file_name += f'({time_limit})'
+	file_name += f'({time_limit if time_limit else ""})'
 	
 	solvers = {
 		'gurobi': pulp.GUROBI_CMD(logPath=file_name + '.gurobi.sol.log', msg=False, timeLimit=time_limit), 
@@ -309,7 +386,7 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None):
 				print('\t  ',j, ': \t', pulp.value(x[i][j]), file=output)
 
 		print('\n', file=log)		
-		list_format = [(j + 1, i + 1, pulp.value(x[i][j]) if type(pulp.value(x[i][j])) == int or not pulp.value(x[i][j]).is_integer() else int(pulp.value(x[i][j]))) for j in x[i] for i in x if pulp.value(x[i][j])]
+		list_format = [(j + 1, i + 1, pulp.value(x[i][j]) if pulp.value(x[i][j]) == None or type(pulp.value(x[i][j])) == int or not pulp.value(x[i][j]).is_integer() else int(pulp.value(x[i][j]))) for i in x for j in x[i] if pulp.value(x[i][j])]
 		sol_list = open(solution_list,'w')
 		print(end='{', file=sol_list)
 		print(*[str(t).replace(' ', '') for t in list_format], sep=', ', end='}', file=sol_list)
@@ -323,7 +400,7 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None):
 					matrix_format.append([])
 				while i >= len(matrix_format[j]): 	
 					matrix_format[j].append(0)
-				matrix_format[j][i] = pulp.value(x[i][j]) if type(pulp.value(x[i][j])) == int or not pulp.value(x[i][j]).is_integer() else int(pulp.value(x[i][j]))  	
+				matrix_format[j][i] = pulp.value(x[i][j]) if pulp.value(x[i][j]) == None or type(pulp.value(x[i][j])) == int or not pulp.value(x[i][j]).is_integer() else int(pulp.value(x[i][j]))  	
 
 		sol_matrix = open(solution_matrix,'w')
 		print(file=sol_matrix,end='[')
@@ -386,6 +463,8 @@ def dict_log (log_dict, log=sys.stdout):
 	for m in ('matrix','matrix_post'):
 		if not m in log_dict:
 			continue
+		if log_dict[m] == None:
+			continue 
 		print('\t' + m.replace('_',' ').strip() + ':', file=log)	
 		for k in log_dict[m]:
 			print('\t',k.strip(), log_dict[m][k], file=log)
@@ -394,9 +473,12 @@ def dict_log (log_dict, log=sys.stdout):
 if __name__ == '__main__':	
 	
 	reading_method = file_format[sys.argv[True].upper()]
+	optional = {}
+	if len(sys.argv) > 4: 
+		optional['single_source'] = sys.argv[4][0].upper() != 'M'
 	today = time.localtime()[:5]
 	folder = 'res'
-	#'''
+	'''
 	import os
 	c = 0
 	d = 3
@@ -415,7 +497,7 @@ if __name__ == '__main__':
 
 		folder += '/'	
 		
-		if c >= 5:
+		if c >= len(today):
 			break 
 		
 		b = c 
@@ -429,7 +511,7 @@ if __name__ == '__main__':
 	folder += '/' * (len(folder) > 0 and not folder[-1] in '/\\')
 	
 	print(reading_method)
-	solve(reading_method, sys.argv[2], folder, open(folder + sys.argv[2].split('\\')[-1].split('/')[-1].strip() + ('' if len(sys.argv) <= 3 else '('+sys.argv[3]+')') + '.log', 'w'), None if len(sys.argv) <= 3 else int(sys.argv[3]))
+	solve(reading_method, sys.argv[2], folder, open(folder + sys.argv[2].split('\\')[-1].split('/')[-1].strip() + ('' if len(sys.argv) <= 3 else '('+sys.argv[3]+')') + '.log', 'w'), None if len(sys.argv) <= 3 else int(sys.argv[3]), **optional)
 		
 		
 		
