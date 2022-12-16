@@ -274,12 +274,12 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 	file_name = input.split('/')[-1].split('\\')[-1]
 	file_extension = file_name.split('.')[-1]
 	now = time.localtime()
-	print('\n[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d] \n ' %now[3:6],input,'\t',file_name,'\t',time_limit)
+	print('\n[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d]\tInstance reading.... \n ' %now[3:6],input,'\t',file_name,'\t',time_limit)
 	
 	
 	
 	
-	print('[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d] \n Instance file:\t' %now[3:6],input, '\n Extension:\t',file_extension.upper(), '\n Time limit:\t', time_limit, file=output)
+	print('[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d]\tReading.... \n Instance file:\t' %now[3:6],input, '\n Extension:\t',file_extension.upper(), '\n Time limit:\t', time_limit, file=output)
 	
 	
 		
@@ -324,9 +324,11 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 		dt = (tf - ti)/(1000**3)
 		pdt = (ptf - pti)/(10**9)
 		tf //= (10**9)
+
+		now = time.localtime(tf)
 		
 		print(pulp.LpStatus[res], 'objective function value:\t', pulp.value(instance.objective),'\n',dt, 's\t',pdt,'s\nTime:\t',instance.solutionTime, '\nCPU time:\t',instance.solutionCpuTime, file=log)		
-		print('[%02d/%02d/%02d' %time.localtime(tf)[:3][::-1], '%02d:%02d:%02d]\t' %time.localtime(tf)[3:6], 
+		print('[%02d/%02d/%02d' %now[:3][::-1], '%02d:%02d:%02d]\t' %now[3:6], 
 					dt,'s\t',pdt,'s', '\nTime:\t',instance.solutionTime,'\nCPU time:\t',instance.solutionCpuTime, '\nObjective function value:\t',pulp.value(instance.objective),'\n',pulp.LpStatus[res], file=output)
 		
 	
