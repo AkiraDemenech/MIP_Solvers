@@ -244,7 +244,7 @@ def read_beasley (file, prefix = 'CFLP', single_source = False):
 
 	cflp += pulp.lpSum(c[i][j] * x[i][j] / d[j] for i in I for j in J) + pulp.lpSum(f[i] * y[i] for i in I)
 	
-	#'''
+	'''
 	with open('istanze.log', 'w') as instance_log:
 		print('Capacity/FixedCost =', {i:(s[i], f[i]) for i in I}, file=instance_log)		
 				

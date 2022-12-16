@@ -28,7 +28,7 @@ cut_name = {'GUROBI': {
 
 table = csv.writer(open('cflp.log.csv', 'w', encoding='UTF-8'), delimiter=';', quotechar="'")
 concat = lambda v, p = '', sep = '': concat(v[1:], p + sep + v[0], '_') if len(v) else p
-cols = [['instance_source_file_name'],['solver'], ['time_limit'],
+cols = [['solver'], ['instance_source_file_name'],['time_limit'],
 	['time'], #['rootTime'], 
 	
 	
@@ -55,20 +55,20 @@ cols = [['instance_source_file_name'],['solver'], ['time_limit'],
 	]
 
 dir = 'res'
-files = [a for a in os.listdir(dir) if a.endswith('.sol.log')]
-files.sort()
+
 logs = []
 cuts = {}
 
 last_index = lambda string, substring, prev_index=-1: prev_index if string.find(substring,prev_index+1) < 0 else last_index(string, substring, string.find(substring, prev_index + 1))
+int_end = lambda string, end: int_end(string, end + 1) if end < len(string) and string[end].isdigit() else end
+int_start = lambda string, start=0: int_start(string, start + 1) if start < len(string) and not string[start].isdigit() else start 
+to_int = lambda string: int(string) if len(string) > 0 else 0
+files = [(a[:int_start(a)], to_int(a[int_start(a): int_end(a, int_start(a))]), a[:last_index(a,'(')], to_int(a.split('.')[-4].split('(')[-1].split(')')[0]), a.split('.')[-3], a) for a in os.listdir(dir) if a.endswith('.sol.log')]
+files.sort()
 
-for log_file in files:
-	div = log_file.split('.')
-	sol = div[-3]
-	time_limit = div[-4].split('(')[-1].split(')')[0]
+for instance_type, instance_num, file_name, time_limit, sol, log_file in files:
 	
-	file_name = log_file[:last_index(log_file,'(')]
-	print(time_limit,'\t',sol,'\t',file_name)
+	print(repr(instance_type), instance_num, '\t', time_limit,'\t',file_name,'\t',sol)
 	#log_file = f'resol/{cod}Cap{cap}.txt.{s}.sol.log'
 	solver = sol.split('_')[-1].upper()
 	if not solver in cut_name:
@@ -85,7 +85,7 @@ for log_file in files:
 		for c in log['cut_info']['cuts']:	
 
 			if not c in cut_name[solver]:
-				cut_name[solver][c] = c.upper().replace('\t',' ').replace(' ','_')
+				cut_name[solver][c] = c.upper().replace('\t',' ').replace(' ','-').replace('-','_')
 				print(solver,'Cut',c,'included!')
 			
 			if not cut_name[solver][c] in log['cut_info']:
@@ -113,7 +113,7 @@ print('\n')
 
 for log in logs:			
 	data = []
-	print(log['solver'], '\t', log['instance_source_file_name'], log['code'])
+	print(log['solver'], '\t', log['instance_source_file_name'], log['time_limit'])
 	for c in cols:
 		l = log
 		for c in c:			
