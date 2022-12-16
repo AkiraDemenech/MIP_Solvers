@@ -273,16 +273,21 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 #	instances = problems()			
 	file_name = input.split('/')[-1].split('\\')[-1]
 	file_extension = file_name.split('.')[-1]
-	print('\n',input,'\t',file_name,'\t',time_limit)
+	now = time.localtime()
+	print('\n[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d] \n ' %now[3:6],input,'\t',file_name,'\t',time_limit)
 	
 	
 	
 	
-	print('Instance file:\t',input, '\nExtension:\t',file_extension.upper(), '\nTime limit:\t', time_limit, file=output)
+	print('[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d] \n Instance file:\t' %now[3:6],input, '\n Extension:\t',file_extension.upper(), '\n Time limit:\t', time_limit, file=output)
 	
 	
 		
 	instance, x, y = read(open(input,'r'), **reading_args)
+
+	now = time.localtime()
+	print('[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d]\tInstance ready \n' %now[3:6])
+	print('[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d]\tInstance ready \n' %now[3:6], file=output)
 
 	#print(instance)
 	instance_name = file_name
@@ -293,7 +298,7 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 	solvers = {
 		'gurobi': pulp.GUROBI_CMD(logPath=file_name + '.gurobi.sol.log', msg=False, timeLimit=time_limit), 
 		'cplex': pulp.CPLEX_CMD(logPath=file_name + '.cplex.sol.log', msg=False, timeLimit=time_limit), 		
-		'scip': pulp.SCIP_CMD(options=['-l', './' + file_name + '.scip.sol.log'], msg=False, timeLimit=time_limit, path=r'C:/Program Files/SCIPOptSuite 8.0.1/bin/scip.exe'), # colocar o caminho exato do SCIP no dispositivo que for executar 
+	#	'scip': pulp.SCIP_CMD(options=['-l', './' + file_name + '.scip.sol.log'], msg=False, timeLimit=time_limit, path=r'C:/Program Files/SCIPOptSuite 8.0.1/bin/scip.exe'), # colocar o caminho exato do SCIP no dispositivo que for executar 
 		'pulp_cbc': pulp.PULP_CBC_CMD(logPath= file_name + '.pulp_cbc.sol.log', msg=False, timeLimit=time_limit) # CBC precisa ser a parte final do nome do solver no dicionário e no log, sendo separado dos termos anteriores por _ ou -  
 	}
 	solver_logs = {}
@@ -304,8 +309,9 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 		solution_list = file_name + '.' + s + '.list.log'
 		solution_matrix = file_name + '.' + s + '.matrix.log'
 		sl = solver_logs[s] = {}
-		print('\n\t',s)
-		print('\n[%02d/%02d/%02d' %time.localtime()[:3][::-1], '%02d:%02d:%02d]\t' %time.localtime()[3:6],s.upper(), 'at', file_log, file=output)
+		now = time.localtime()
+		print('\n[%02d/%02d/%02d' %now[:3][::-1], '%02d:%02d:%02d]\t' %now[3:6],s)
+		print('\n[%02d/%02d/%02d' %now[:3][::-1], '%02d:%02d:%02d]\t' %now[3:6],s.upper(), 'at', file_log, file=output)
 		log = open(file_log,'w')
 		
 		

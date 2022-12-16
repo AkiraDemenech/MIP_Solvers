@@ -21,8 +21,9 @@ cut_name = {'GUROBI': {
 		'Flow':	'FLOW',
 		'Gomory fractional':	'GOMORY',
 		'Mixed integer rounding':	'MIR',
-		'Zero-half': 'ZERO_HALF',
-		'Lift and project':	'OUTROS'#'LIFT_PROJECT'	
+	#	'Lift and project':	'OUTROS',#'LIFT_PROJECT',		
+		'Zero-half': 'ZERO_HALF'
+	
 	}, 'CBC': {}
 }
 
@@ -85,7 +86,7 @@ for instance_type, instance_num, file_name, time_limit, sol, log_file in files:
 		for c in log['cut_info']['cuts']:	
 
 			if not c in cut_name[solver]:
-				cut_name[solver][c] = c.upper().replace('\t',' ').replace(' ','-').replace('-','_')
+				cut_name[solver][c] = c.strip().upper().replace('\t',' ').replace(' ','-').replace('-','_')
 				print(solver,'Cut',c,'included!')
 			
 			if not cut_name[solver][c] in log['cut_info']:
