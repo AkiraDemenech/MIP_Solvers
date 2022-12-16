@@ -1,4 +1,3 @@
-
 python cflp.py mess cap/PublicInstances/toy.dzn 	 600  
 python cflp.py mess cap/PublicInstances/toy.dzn 	 1800  
 python cflp.py mess cap/PublicInstances/toy.dzn 	 3600  

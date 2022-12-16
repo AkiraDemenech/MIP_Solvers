@@ -54,8 +54,6 @@ cols = [['instance_source_file_name'],['solver'], ['time_limit'],
 
 	]
 
-
-
 dir = 'res'
 files = [a for a in os.listdir(dir) if a.endswith('.sol.log')]
 files.sort()

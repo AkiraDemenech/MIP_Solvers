@@ -156,8 +156,6 @@ def read_mess (file, prefix = 'CFLP', single_source = False):
 	cflp += pulp.lpSum(c[j][i] * x[i][j] for i in I for j in J) + pulp.lpSum(f[i] * y[i] for i in I)
 
 	
-
-
 	
 	#print(data['INCOMPATIBLEPAIRS'])
 	k = 0
@@ -195,7 +193,6 @@ def read_beasley (file, prefix = 'CFLP', single_source = False):
 
 	 
 
-				
 	prefix += '_' + file.name.split('/')[-1].split('\\')[-1].strip()	
 	cflp = pulp.LpProblem(prefix, pulp.LpMinimize)
 
@@ -219,8 +216,6 @@ def read_beasley (file, prefix = 'CFLP', single_source = False):
 		s[i] = float(next(input))
 		f[i] = float(next(input))
 
-				
-				
 		y[i] = pulp.LpVariable(f'y_{i}', cat=pulp.LpBinary)
 		x[i] = {}
 		c[i] = {}
