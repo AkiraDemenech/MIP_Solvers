@@ -337,7 +337,7 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 		facilities = [i for i in y if pulp.value(y[i])]
 		facilities.sort()
 		
-		print('\t',dt,pdt,instance.solutionTime,instance.solutionCpuTime,'\n\t',pulp.value(instance.objective), pulp.LpStatus[res],'\t',facilities)
+		print('[%02d/%02d/%02d' %now[:3][::-1], '%02d:%02d:%02d]\t' %now[3:6],dt,pdt,instance.solutionTime,instance.solutionCpuTime,'\n\t',pulp.value(instance.objective), pulp.LpStatus[res],'\t',facilities)
 		print(f'Facilities ({len(facilities)}):\t', facilities, '\n\tFacilities: assigned clients', file=output)			
 		print(str(facilities).replace('[',f'Selected facilities ({len(facilities)}):\t').replace(']','\nFacilities: assigned clients'), file=log) 
 		
