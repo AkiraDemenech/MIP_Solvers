@@ -261,13 +261,7 @@ def read_beasley (file, prefix = 'CFLP', single_source = False):
 file_format = {'SOBOLEV': read_sobolev, 'BEASLEY': read_beasley, 'MESS': read_mess}	
 	
 	
-def problems (cap = {10, 20, 30, 40, 50}, code = range(1, 1 + 20)):				
-	ilp = {} # http://www.math.nsc.ru/AP/benchmarks/CFLP/cflp_tabl-eng.html
-	for ca in cap:
-		ilp[ca] = {}
-		for co in code:
-			ilp[ca][co] = read_sobolev(open(f'cap/{ca}/{co}Cap{ca}.txt','r'), open(f'Cap{ca}_{co}.py','w'))
-	return ilp		
+		
 
 def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **reading_args):
 #	instances = problems()			
@@ -283,11 +277,19 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 	
 	
 		
+	ti = time.time_ns()	
+	pti = time.perf_counter_ns()
 	instance, x, y = read(open(input,'r'), **reading_args)
+	tf = time.time_ns()
+	ptf = time.perf_counter_ns()
 
-	now = time.localtime()
-	print('[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d]\tInstance ready \n' %now[3:6])
-	print('[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d]\tInstance ready \n' %now[3:6], file=output)
+	dt = (tf - ti) / (10**9)
+	pdt = (ptf - pti) / (1000**3)
+	 
+
+	now = time.localtime(tf / (10**9))
+	print('[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d]\tInstance ready' %now[3:6], f'({dt}s {pdt}s)\n')
+	print('[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d]\tInstance ready' %now[3:6], f'({dt}s {pdt}s)\n', file=output)
 
 	#print(instance)
 	instance_name = file_name
