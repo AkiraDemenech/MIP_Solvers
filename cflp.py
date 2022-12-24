@@ -276,7 +276,6 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 	print('[%d/%02d/%02d' %now[:3][::-1],'%02d:%02d:%02d]\tReading.... \n Instance file:\t' %now[3:6],input, '\n Extension:\t',file_extension.upper(), '\n Time limit:\t', time_limit, file=output)
 	
 	
-		
 	ti = time.time_ns()	
 	pti = time.perf_counter_ns()
 	instance, x, y = read(open(input,'r'), **reading_args)
