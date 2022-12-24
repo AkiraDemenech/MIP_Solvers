@@ -1,0 +1,1 @@
+Soluções das instâncias com satisfação binária e desconsiderando incompatibilidades (mess:SS-CFLP)

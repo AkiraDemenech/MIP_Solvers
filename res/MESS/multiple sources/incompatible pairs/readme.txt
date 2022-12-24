@@ -1,0 +1,1 @@
+Soluções das instâncias na modelagem original: satisfação inteira e pares incompatíveis (mess:MS-CFLP-CI)

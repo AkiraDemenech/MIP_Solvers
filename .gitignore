@@ -1,3 +1,8 @@
+cap/GalvaoData
+
+
+cap/tesi/CapWarehouse/Instances
+
 # LaTeX files 
 *.synctex.gz 
 
@@ -59,9 +64,10 @@ coverage.xml
 *.pot
 
 # Django stuff:
-*.zip
+
 *.log
 *.aux
+*.tar.z
 local_settings.py
 db.sqlite3
 db.sqlite3-journal

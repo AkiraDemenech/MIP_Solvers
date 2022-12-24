@@ -1,0 +1,1 @@
+Soluções das instâncias na modelagem original: satisfação binária (sobolev:SS-CFLP)

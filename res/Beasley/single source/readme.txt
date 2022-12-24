@@ -1,0 +1,1 @@
+Soluções das instâncias na modelagem original: satisfação binária (beasley:SS-CFLP)

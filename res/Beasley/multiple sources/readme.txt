@@ -1,0 +1,1 @@
+Soluções das instâncias com satisfação inteira (beasley:MS-CFLP)

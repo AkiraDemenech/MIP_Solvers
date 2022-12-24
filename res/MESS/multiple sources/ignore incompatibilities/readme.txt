@@ -1,0 +1,1 @@
+Soluções das instâncias com satisfação inteira (mess:MS-CFLP)

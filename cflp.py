@@ -157,9 +157,6 @@ def read_mess (file, prefix = 'CFLP', single_source = False, incompatible_pairs 
 
 	
 	
-
-
-
 	if incompatible_pairs:
 		
 		k = 0
