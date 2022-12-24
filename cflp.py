@@ -75,7 +75,7 @@ def read_sobolev (file, prefix = 'CFLP', single_source = True):
 	
 	return cflp, x, y
 			
-def read_mess (file, prefix = 'CFLP', single_source = False):		
+def read_mess (file, prefix = 'CFLP', single_source = False, incompatible_pairs = True):		
 
 	data = {
 			'Capacity'.upper(): [[]],
@@ -157,27 +157,33 @@ def read_mess (file, prefix = 'CFLP', single_source = False):
 
 	
 	
-	#print(data['INCOMPATIBLEPAIRS'])
-	k = 0
-	for p in data['INCOMPATIBLEPAIRS']:
-		if len(p) != 2:
-			if len(p):
-				print('Wrong incompatible pair:\t',p)	
 
-			if len(p) <= 1:	
-				print('Incompatibility',p,'ignored.')
-				continue
 
-		disj = {}			
-		for j in p:
-			j -= 1 # índice deve começar em 0
-			for i in I:				 
-				disj[j,i] = pulp.LpVariable(f'disj_{i}_{j}_{k}', cat=pulp.LpBinary)
-				cflp += x[i][j] <= d[j] * disj[j, i] 
-		for i in I:
-			cflp += pulp.lpSum(disj[j - 1, i] for j in p) <= len(p) - 1		
 
-		k += 1
+	if incompatible_pairs:
+		
+		k = 0
+		for p in data['INCOMPATIBLEPAIRS']:
+			if len(p) != 2:
+				if len(p):
+					print('Wrong incompatible pair:\t',p)	
+
+				if len(p) <= 1:	
+					print('Incompatibility',p,'ignored.')
+					continue
+
+			disj = {}			
+			for j in p:
+				j -= 1 # índice deve começar em 0
+				for i in I:				 
+					disj[j,i] = pulp.LpVariable(f'disj_{i}_{j}_{k}', cat=pulp.LpBinary)
+					cflp += x[i][j] <= d[j] * disj[j, i] 
+			for i in I:
+				cflp += pulp.lpSum(disj[j - 1, i] for j in p) <= len(p) - 1		
+
+			k += 1
+	else:		
+		print('Ignoring incompatible pairs')
 		
 	if single_source:
 		print('Single source version')
@@ -436,6 +442,7 @@ def dict_log (log_dict, log=sys.stdout):
 	print('\t' + log_dict['solver'], log_dict['version'], file=log)
 	print('\t' + log_dict['status'].strip(),log_dict['status_code'],log_dict['sol_code'], file=log)
 	print('\tTime:',log_dict['time'], file=log)
+	
 	print('\tRoot time:', log_dict['rootTime'], file=log)
 	print('\tBest solution:', log_dict['best_solution'], file=log)
 	print('\tBest bound:', log_dict['best_bound'], file=log)
@@ -480,6 +487,8 @@ if __name__ == '__main__':
 	optional = {}
 	if len(sys.argv) > 4: 
 		optional['single_source'] = sys.argv[4][0].upper() != 'M'
+		if len(sys.argv) > 5:
+			optional['incompatible_pairs'] = sys.argv[5][0].upper() == 'P' 
 	today = time.localtime()[:5]
 	folder = 'res'
 	'''
