@@ -529,7 +529,6 @@ if __name__ == '__main__':
 	print(reading_method)
 	solve(reading_method, sys.argv[2], folder, open(folder + sys.argv[2].split('\\')[-1].split('/')[-1].strip() + ('' if len(sys.argv) <= 3 else '('+sys.argv[3]+')') + '.log', 'w'), None if len(sys.argv) <= 3 else int(sys.argv[3]), **optional)
 		
-		
 	print(None, file=open(last_instance_file, 'w', encoding='utf-8'))	
 		
 		
