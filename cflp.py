@@ -480,12 +480,16 @@ def dict_log (log_dict, log=sys.stdout):
 
 if __name__ == '__main__':	
 	
-	reading_method = file_format[sys.argv[True].upper()]
+	reading_format = sys.argv[True].upper()
+	reading_method = file_format[reading_format]
 	optional = {}
+	source = pairs = ''
 	if len(sys.argv) > 4: 
-		optional['single_source'] = sys.argv[4][0].upper() != 'M'
+		source = sys.argv[4][0].upper()
+		optional['single_source'] = source != 'M'
 		if len(sys.argv) > 5:
-			optional['incompatible_pairs'] = sys.argv[5][0].upper() == 'P' 
+			pairs = sys.argv[5][0].upper()
+			optional['incompatible_pairs'] = pairs == 'P' 
 	today = time.localtime()[:5]
 	folder = 'res'
 	'''
@@ -519,11 +523,14 @@ if __name__ == '__main__':
 
 	
 	folder += '/' * (len(folder) > 0 and not folder[-1] in '/\\')
+	last_instance_file = f'Last_{reading_format}_{"" if len(sys.argv) < 3 else sys.argv[3]}_{source}_{pairs}.log'
+	print(end=sys.argv[2], file=open(last_instance_file, 'w', encoding='utf-8'))
 	
 	print(reading_method)
 	solve(reading_method, sys.argv[2], folder, open(folder + sys.argv[2].split('\\')[-1].split('/')[-1].strip() + ('' if len(sys.argv) <= 3 else '('+sys.argv[3]+')') + '.log', 'w'), None if len(sys.argv) <= 3 else int(sys.argv[3]), **optional)
 		
 		
+	print(None, file=open(last_instance_file, 'w', encoding='utf-8'))	
 		
 		
 		
