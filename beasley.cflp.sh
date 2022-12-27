@@ -1,3 +1,6 @@
+readonly TMOUT=-1
+export TMOUT
+
 python3 cflp.py beasley cap/Istanze/cap61	120 s 	
 python3 cflp.py beasley cap/Istanze/cap61	300 s	
 python3 cflp.py beasley cap/Istanze/cap61	600 s	

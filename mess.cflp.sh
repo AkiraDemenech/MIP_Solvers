@@ -1,3 +1,6 @@
+readonly TMOUT=-1
+export TMOUT
+
 python3 cflp.py mess cap/PublicInstances/toy.dzn 	 600  
 python3 cflp.py mess cap/PublicInstances/toy.dzn 	 1800  
 python3 cflp.py mess cap/PublicInstances/toy.dzn 	 3600  

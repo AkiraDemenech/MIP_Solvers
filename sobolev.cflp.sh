@@ -1,3 +1,6 @@
+
+readonly TMOUT=-1
+export TMOUT
   
 python3 cflp.py sobolev cap/20/4Cap20.txt 	 600  
 
