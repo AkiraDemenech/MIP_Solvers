@@ -3,7 +3,6 @@ import pulp
 import orloge
 import sys
 import time
-import traceback
 
 def matrix_to_vector (M):
 	V = []
@@ -303,6 +302,7 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 	solvers = {
 		'gurobi': pulp.GUROBI_CMD(logPath=file_name + '.gurobi.sol.log', msg=False, timeLimit=time_limit), 
 		'cplex': pulp.CPLEX_CMD(logPath=file_name + '.cplex.sol.log', msg=False, timeLimit=time_limit), 		
+		
 	#	'scip': pulp.SCIP_CMD(options=['-l', './' + file_name + '.scip.sol.log'], msg=False, timeLimit=time_limit, path=r'C:/Program Files/SCIPOptSuite 8.0.1/bin/scip.exe'), # colocar o caminho exato do SCIP no dispositivo que for executar 
 		'pulp_cbc': pulp.PULP_CBC_CMD(logPath= file_name + '.pulp_cbc.sol.log', msg=False, timeLimit=time_limit) # CBC precisa ser a parte final do nome do solver no dicionário e no log, sendo separado dos termos anteriores por _ ou -  
 	}
@@ -321,26 +321,14 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 		
 		
 		
-		try:
-			ti = time.time_ns()
-			pti = time.perf_counter_ns()
-			res = instance.solve(solvers[s])
-			ptf = time.perf_counter_ns()
-			tf = time.time_ns()
-			dt = (tf - ti)/(1000**3)
-			pdt = (ptf - pti)/(10**9)
-			tf //= (10**9)
-		except Exception as error:	
-			print(type(error).__name__ + ':\t',str(error),error.args,'\n',repr(error),'\n', file=output)
-			print(type(error).__name__ + ':\t',str(error),error.args,'\n',repr(error),'\n', file=log)
-
-			traceback.print_exception(error, file=output)
-			traceback.print_exception(error, file=log)
-
-			print(type(error).__name__ + ':\t',str(error),error.args,'\n',repr(error),'\n')
-			traceback.print_exception(error)
-
-			continue 
+		ti = time.time_ns()
+		pti = time.perf_counter_ns()
+		res = instance.solve(solvers[s])
+		ptf = time.perf_counter_ns()
+		tf = time.time_ns()
+		dt = (tf - ti)/(1000**3)
+		pdt = (ptf - pti)/(10**9)
+		tf //= (10**9)
 
 		now = time.localtime(tf)
 		
@@ -442,7 +430,6 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 		log.close()
 		
 	print('End',file=output)
-	print('End\n')
 		
 
 
@@ -537,13 +524,15 @@ if __name__ == '__main__':
 
 	
 	folder += '/' * (len(folder) > 0 and not folder[-1] in '/\\')
-	last_instance_file = f'Last_{reading_format}_{"" if len(sys.argv) <= 3 else sys.argv[3]}_{source}_{pairs}.log'
+	last_instance_file = f'Last_{reading_format}_{"" if len(sys.argv) < 3 else sys.argv[3]}_{source}_{pairs}.log'
 	print(end=repr(sys.argv[2]), file=open(last_instance_file, 'w', encoding='utf-8'))
 	
 	print(reading_method)
 	solve(reading_method, sys.argv[2], folder, open(folder + sys.argv[2].split('\\')[-1].split('/')[-1].strip() + ('' if len(sys.argv) <= 3 else '('+sys.argv[3]+')') + '.log', 'w'), None if len(sys.argv) <= 3 else int(sys.argv[3]), **optional)
 		
-	print(None, file=open(last_instance_file, 'w'))	
+
+	print(sys.argv,'concluído com sucesso',file=open('cflp.log','a',encoding='utf-8'))
+	print(None, file=open(last_instance_file, 'w'))		
 		
 		
 		
