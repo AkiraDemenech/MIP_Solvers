@@ -3,6 +3,7 @@ import pulp
 import orloge
 import sys
 import time
+import traceback
 
 def matrix_to_vector (M):
 	V = []
@@ -320,14 +321,26 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 		
 		
 		
-		ti = time.time_ns()
-		pti = time.perf_counter_ns()
-		res = instance.solve(solvers[s])
-		ptf = time.perf_counter_ns()
-		tf = time.time_ns()
-		dt = (tf - ti)/(1000**3)
-		pdt = (ptf - pti)/(10**9)
-		tf //= (10**9)
+		try:
+			ti = time.time_ns()
+			pti = time.perf_counter_ns()
+			res = instance.solve(solvers[s])
+			ptf = time.perf_counter_ns()
+			tf = time.time_ns()
+			dt = (tf - ti)/(1000**3)
+			pdt = (ptf - pti)/(10**9)
+			tf //= (10**9)
+		except Exception as error:	
+			print(type(error).__name__ + ':\t',str(error),error.args,'\n',repr(error),'\n', file=output)
+			print(type(error).__name__ + ':\t',str(error),error.args,'\n',repr(error),'\n', file=log)
+
+			traceback.print_exception(error, file=output)
+			traceback.print_exception(error, file=log)
+
+			print(type(error).__name__ + ':\t',str(error),error.args,'\n',repr(error),'\n')
+			traceback.print_exception(error)
+
+			continue 
 
 		now = time.localtime(tf)
 		
@@ -429,6 +442,7 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 		log.close()
 		
 	print('End',file=output)
+	print('End\n')
 		
 
 
@@ -523,7 +537,7 @@ if __name__ == '__main__':
 
 	
 	folder += '/' * (len(folder) > 0 and not folder[-1] in '/\\')
-	last_instance_file = f'Last_{reading_format}_{"" if len(sys.argv) < 3 else sys.argv[3]}_{source}_{pairs}.log'
+	last_instance_file = f'Last_{reading_format}_{"" if len(sys.argv) <= 3 else sys.argv[3]}_{source}_{pairs}.log'
 	print(end=repr(sys.argv[2]), file=open(last_instance_file, 'w', encoding='utf-8'))
 	
 	print(reading_method)
