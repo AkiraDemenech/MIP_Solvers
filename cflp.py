@@ -333,13 +333,14 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 			pdt = (ptf - pti)/(10**9)
 			tf //= (10**9)
 		except Exception as error:	
-			print(type(error).__name__ + ':\t',str(error),error.args,'\n',repr(error),'\n', file=output)
+			now = time.localtime()
+			print('\n[%02d/%02d/%02d' %now[:3][::-1], '%02d:%02d:%02d]\t' %now[3:6], type(error).__name__ + ':\t', str(error), error.args, '\n',repr(error),'\n', file=output)
 			print(type(error).__name__ + ':\t',str(error),error.args,'\n',repr(error),'\n', file=log)
 
 			traceback.print_exception(error, file=output)
 			traceback.print_exception(error, file=log)
 
-			print(type(error).__name__ + ':\t',str(error),error.args,'\n',repr(error),'\n')
+			print('\n[%02d/%02d/%02d' %now[:3][::-1], '%02d:%02d:%02d]\t' %now[3:6], type(error).__name__ + ':\t', str(error), error.args, '\n',repr(error),'\n')
 			traceback.print_exception(error)
 
 			continue 
@@ -542,7 +543,7 @@ if __name__ == '__main__':
 	last_instance_file = f'Last_{reading_format}_{"" if len(sys.argv) <= 3 else sys.argv[3]}_{source}_{pairs}.log'
 	print(end=repr(sys.argv[2]), file=open(last_instance_file, 'w', encoding='utf-8'))
 	
-	print(reading_method)
+	print(sys.argv, '\n', reading_method)
 	solve(reading_method, sys.argv[2], folder, open(folder + sys.argv[2].split('\\')[-1].split('/')[-1].strip() + ('' if len(sys.argv) <= 3 else '('+sys.argv[3]+')') + '.log', 'w'), None if len(sys.argv) <= 3 else int(sys.argv[3]), **optional)
 		
 
