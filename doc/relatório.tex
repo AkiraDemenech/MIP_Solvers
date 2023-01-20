@@ -1,9 +1,13 @@
+
+
 \documentclass[]{article}
 \usepackage{amsfonts} 
 
 %opening
 \title{}
 \author{Guilherme Akira Demenech Mori}
+
+% https://github.com/akirademenech/MIP_Solvers/blob/main/doc/relat%C3%B3rio.tex
 
 \begin{document}
 
@@ -15,25 +19,26 @@
 
 \section{Modelagem dos problemas}
 
-	Consideramos dois casos do problema de localização de facilidades com capacidade limitada 
+	Consideramos três casos do problema de localização de facilidades com capacidade limitada 
 	(\textit{Capacitated Facility Location Problem}, CFLP):
 	com fonte única (\textit{single-source}, SS) 
-	e com múltiplas fontes (\textit{multi-source}, MS). 
+	e com múltiplas fontes (\textit{multi-source}, MS), 
+    esse último com e sem incompatibilidades de clientes (\textit{customer incompatibilities}, CI). 
 	
-	\subsection{Problema de localização de facilidades com capacidade limitada e fonte única}
+\subsection{SS-CFLP: problema de localização de facilidades com capacidade limitada e fonte única}
 	% http://old.math.nsc.ru/AP/benchmarks/CFLP/cflp-eng.html
 	
-	No caso de fonte única, a limitação de capacidade é um valor só $s$ fixado para todas as facilidades.
-	O custo fixo $f$ de abertura também é o mesmo para todas.
+	No caso de fonte única das instâncias adotadas, a limitação de capacidade é uma mesma constante $s$ fixada para todas as facilidades.
+	O valor do custo fixo $f$ de abertura também é o mesmo para todas.
 	O conjunto de facilidades é dado por $I$ e o de clientes por $J$.
 	A formulação adotada traz a demanda $p_{ij}$ do cliente $j \in J$ se for atendido pela facilidade $i \in I$, 
-	sendo possível que o cliente $j$ não possa ser atendido pela facilidade $i$.
-	O custo de transporte $g_{ij}$ da facilidade $i \in I$ para o cliente $j \in J$ é referente à toda a demanda, não ao transporte de cada unidade (ou medida) requerida.
+	podendo existir $i$ que não seja capaz de atender $j$.
+	O custo de transporte $g_{ij}$ de $i \in I$ para $j \in J$ é referente à toda a demanda desse cliente $j$ para a facilidade $i$, não ao transporte de cada unidade (ou medida) requerida.
 	
 	$x_{ij}$ indica se a facilidade $i \in I$ atenderá a demanda do cliente $j \in J$ 
-	e a variável binária $y_i$ indica se a facilidade $i \in I$ será aberta ou não.
+	e a variável binária $y_i$ indica se $i $ será aberta ou não, sendo exigido que a facilidade seja aberta para poder atender demandas de clientes.
 	
-	São aplicadas as restrições de capacidade das facilidades (\ref{ss:const:capacity}) e de satisfação da demanda (\ref{ss:const:demand}).
+	São aplicadas as restrições de abertura e capacidade das facilidades (\ref{ss:const:capacity}) e de satisfação da demanda (\ref{ss:const:demand}).
 	
 	\begin{equation}
 		\label{ss:const:capacity}		
@@ -71,34 +76,22 @@
 	o modelo, porém, se tornaria bastante estranho:  
 	demandas $p_{ij}$ diferentes poderiam ser parcialmente atendidas, satisfazendo uma demanda mista não-planejada.
 	
-	\subsection{Problema de localização de facilidades com capacidade limitada e múltiplas fontes}
-	% https://link.springer.com/article/10.1007/s00500-022-07600-z 
+\subsection{MS-CFLP: problema de localização de facilidades com capacidade limitada e múltiplas fontes}
 	
+
+ 
 	No caso de fontes múltiplas, para o conjunto de facilidades $I$ e de clientes $J$, 
-	a capacidade $s_i$ e o custo fixo de abertura $f_i$ não são necessariamente os mesmos para todas as facilidades $i \in I$, 
-	enquanto a demanda $d_j$ do cliente $j \in J$ é a mesma
+	a capacidade $s_i$ e o custo fixo de abertura $f_i$ não são necessariamente os mesmos para todo $i \in I$, 
+	enquanto a demanda $d_j$ de $j \in J$ é a mesma
 	independente de qual (ou quais) facilidade(s) a satisfaça(m). 
-	O custo de transporte $c_{ij}$, por unidade, da facilidade $i \in I$ para o cliente $j \in J$ existe para todos os pares.
-	
-	No modelo utilizado, é introduzido o conjunto $\Gamma \subseteq J^2$ de pares incompatíveis $\{ j_1, j_2 \} \in \Gamma$, 
-	nos quais os clientes $j_1, j_2 \in J$ não podem ser atendidos simultaneamente por uma mesma facilidade $i \in I$.
+	Nas instâncias utilizadas, o custo de transporte $c_{ij}$, por unidade, da facilidade $i$ para o cliente $j$ existe para todos os pares.
 	
 	Nesse caso, $x_{ij}$ indica quantas unidades a facilidade $i \in I$ suprirá ao cliente $j \in J$ 
 	e, novamente, a variável binária $y_i$ indica se a facilidade $i \in I$ será aberta ou não.
+
+    
 	
-	A disjunção dos pares de clientes incompatíveis pode ser perfeitamente formulada pela técnica \textit{big M} (\ref{ms:const:incomp}), 
-	uma vez que o limitante superior $s_i$ é garantido para todo $x_{ij}$.
-	
-	\begin{equation}
-		\label{ms:const:incomp}		
-		x_{ij_1} \le \lambda_{ij_1j_2} s_i, 
-		\ x_{ij_2} \le (1 - \lambda_{ij_1j_2}) s_i 
-		\quad
-		\forall i \in I, 
-		\ \{ j_1, j_2 \} \in \Gamma  
-	\end{equation}
-	
-	Da mesma forma que o caso anterior, são aplicadas as restrições de capacidade das facilidades (\ref{ms:const:capacity}) e de satisfação da demanda (\ref{ms:const:demand}).
+	Da mesma forma que o caso anterior, são aplicadas as restrições de capacidade das facilidades (\ref{ms:const:capacity}) e de satisfação da demanda (\ref{ms:const:demand}), dessa vez variando a capacidade de acordo com a facilidade e mantendo a demanda do cliente a mesma para todas as facilidades que o atenderem.
 	
 	\begin{equation}
 		\label{ms:const:capacity}		
@@ -114,17 +107,16 @@
 		\forall j \in J
 	\end{equation}
 	
-	As variáveis de disjunção \textit{big M} e abertura devem novamente ser binárias, enquanto o atendimento deve ser inteiro (\ref{ms:const:dom}) 
+	A abertura continua sendo binária, o atendimento deve ser inteiro (\ref{ms:const:dom}) 
 	e o objetivo é minimizar os custos de abertura e transporte (\ref{ms:obj}).
 	
 	\begin{equation}
 		\label{ms:const:dom}		
-		y_i, \lambda_{ij_1j_2} \in \{0, 1\}, 
+		y_i \in \{0, 1\}, 
 		\ x_{ij} \ge 0, 
 		\ x_{ij} \in \mathbb{Z}
 		\quad
-		\forall i \in I, j \in J, 		
-		\ \{ j_1, j_2 \} \in \Gamma
+		\forall i \in I, j \in J
 	\end{equation}	
 	
 	\begin{equation}
@@ -133,6 +125,37 @@
 		(
 		f_i y_i + \sum_{j \in J} c_{ij} x_{ij}
 		)
+	\end{equation}
+
+ \subsection{MS-CFLP-CI: problema de localização de facilidades com capacidade limitada, múltiplas fontes e incompatibilidades de clientes}
+    % https://link.springer.com/article/10.1007/s00500-022-07600-z 
+    
+ 
+	No modelo utilizado \cite{mess}, é introduzido o conjunto $\Gamma \subseteq J^2$ de pares incompatíveis $\{ j_1, j_2 \} \in \Gamma$, 
+	nos quais os clientes $j_1, j_2 \in J$ não podem ser atendidos simultaneamente por uma mesma facilidade $i \in I$.
+
+    Aqui aplicam-se as mesmas restrições de domínio (\ref{ms:const:dom}), de capacidade (\ref{ms:const:capacity}), de satisfação da demanda (\ref{ms:const:demand}) e a mesma função objetivo (\ref{ms:obj}) do modelo MS-CFLP, sendo somente adicionadas as restrições de incompatibilidade entre clientes.
+ 
+	A disjunção dos pares de clientes incompatíveis pode ser perfeitamente formulada pela técnica \textit{big M} (\ref{ms:const:incomp}), 
+	uma vez que o limitante superior $s_i$ é garantido para todo $x_{ij}$.
+	
+	\begin{equation}
+		\label{ms:const:incomp}		
+		x_{ij_1} \le \lambda_{ij_1j_2} s_i, 
+		\ x_{ij_2} \le (1 - \lambda_{ij_1j_2}) s_i 
+		\quad
+		\forall i \in I, 
+		\ \{ j_1, j_2 \} \in \Gamma  
+	\end{equation}
+
+    As variáveis de disjunção \textit{big M} também devem ser binárias (\ref{ci:const:dom}).
+
+    \begin{equation}
+		\label{ci:const:dom}		
+		\lambda_{ij_1j_2} \in \{0, 1\}
+		\quad
+		\forall i \in I,  		
+		\ \{ j_1, j_2 \} \in \Gamma
 	\end{equation}
 
 	Alternativamente, podemos definir as restrições de pares incompatíveis (\ref{ms:const:incomp}) para conjuntos incompatíveis $u_k \in \Gamma'$ (\ref{ms:const:incomp_alt}). 
@@ -162,5 +185,9 @@
 
 	Generalizamos o conjunto de conjuntos de clientes incompatíveis para $\Gamma' \subseteq \{ B / B \subseteq J \}$ e adaptamos a variável binária $\lambda_{ij_tk} \in \{0,1\}$. 
 	 
+
+
+\bibliographystyle{apalike}
+\bibliography{bibliografia.bib} % https://github.com/akirademenech/MIP_Solvers/blob/main/doc/bibliografia.bib
 
 \end{document}
