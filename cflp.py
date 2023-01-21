@@ -309,6 +309,7 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 		'pulp_cbc': pulp.PULP_CBC_CMD(logPath= file_name + '.pulp_cbc.sol.log', msg=False, timeLimit=time_limit) # CBC precisa ser a parte final do nome do solver no dicionário e no log, sendo separado dos termos anteriores por _ ou -  
 	}
 	solver_logs = {}
+	success = False 
 		
 	for s in solvers:
 		file_log = file_name + '.' + s + '.res.log'
@@ -344,6 +345,7 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 			traceback.print_exception(error)
 
 			continue 
+		success += 1
 
 		now = time.localtime(tf)
 		
@@ -449,7 +451,7 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 		
 
 
-	return instance, x, y, solvers, solver_logs		
+	return instance, x, y, solvers, solver_logs, success		
 		
 def dict_log (log_dict, log=sys.stdout):
 
@@ -544,12 +546,10 @@ if __name__ == '__main__':
 	print(end=repr(sys.argv[2]), file=open(last_instance_file, 'w', encoding='utf-8'))
 	
 	print(sys.argv, '\n', reading_method)
-	solve(reading_method, sys.argv[2], folder, open(folder + sys.argv[2].split('\\')[-1].split('/')[-1].strip() + ('' if len(sys.argv) <= 3 else '('+sys.argv[3]+')') + '.log', 'w'), None if len(sys.argv) <= 3 else int(sys.argv[3]), **optional)
+	i,x,y, solvers, logs, success = solve(reading_method, sys.argv[2], folder, open(folder + sys.argv[2].split('\\')[-1].split('/')[-1].strip() + ('' if len(sys.argv) <= 3 else '('+sys.argv[3]+')') + '.log', 'w'), None if len(sys.argv) <= 3 else int(sys.argv[3]), **optional)
 		
-
-	print(sys.argv,'concluído com sucesso',file=open('cflp.log','a',encoding='utf-8'))
-	print(None, file=open(last_instance_file, 'w'))		
-		
+	print(sys.argv,'successfully finished' if success == len(solvers) else (((success > 0) * 'partialy ') + 'failed'),'\t',success, ':', len(solvers), file=open('cflp.log','a',encoding='utf-8'))
+	print(None, file=open(last_instance_file, 'w'))	
 		
 		
 		
