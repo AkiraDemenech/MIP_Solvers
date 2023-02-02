@@ -33,6 +33,13 @@ cols = [['solver'], ['instance_source_file_name'],['time_limit'],
 	['time'], #['rootTime'], 
 	
 	
+	
+	['gap'],
+	['nodes'], # importante 
+
+	['best_solution'],
+	['best_bound'],
+
 	['matrix','constraints'], 
 	['matrix','variables'], 
 	['matrix','nonzeros'],	 
@@ -41,10 +48,8 @@ cols = [['solver'], ['instance_source_file_name'],['time_limit'],
 	['matrix_post','variables'],
 	['matrix_post','nonzeros'], 
 
-	['best_solution'],
-	['best_bound'],
-	['gap'],
-	['nodes'], # importante 
+	
+
 	['first_relaxed'], ['first_solution', 'BestInteger'], ['first_solution', 'CutsBestBound'], 
 
 	['cut_info', 'best_bound'],
