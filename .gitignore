@@ -1,10 +1,18 @@
 cap/GalvaoData
 
 
-cap/tesi/CapWarehouse/Instances
+
+
 
 # LaTeX files 
 *.synctex.gz 
+*.blg
+*.bbl
+*.toc
+*.out
+*.nav
+*.snm
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
