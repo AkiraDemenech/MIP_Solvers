@@ -1,9 +1,17 @@
 
+
+
+
 import pulp
 import orloge
 import sys
 import time
 import traceback
+
+'''
+if time.localtime()[3] >= 18:
+	exit(1) if input('Continue?').strip().upper()[0] == 'N' else print('Continue....') # nice stop
+# '''
 
 def matrix_to_vector (M):
 	V = []
@@ -56,7 +64,7 @@ def read_sobolev (file, prefix = 'CFLP', single_source = True):
 	y = dict((i, pulp.LpVariable(f'y_{i}', 0, 1, pulp.LpBinary)) for i in I)
 	
 	# se a facilidade i serve o cliente j
-	x = {i: {j: pulp.LpVariable(f'x_{i}_{j}', 0, 1) for j in J} for i in I}
+	x = {i: {j: pulp.LpVariable(f'x_{i}_{j}', 0, 1, pulp.LpBinary if single_source else pulp.LpContinuous) for j in J} for i in I}
 	
 	for i in p:					
 		cflp += pulp.lpSum(x[i][j] * p[i][j] for j in p[i]) <= y[i] * fixed_capacity # a capacidade não é superada se a facilidade for aberta 				
@@ -66,11 +74,13 @@ def read_sobolev (file, prefix = 'CFLP', single_source = True):
 		cflp += pulp.lpSum(x[i][j] for i in I if j in p[i] and p[i][j] > 0) >= 1	# demanda atendida por pelo menos uma fonte	(fonte única, pois os custos serão minimizados)		
 				
 	
+	'''
 	if single_source:
 		print('Single source version')
 		for i in x:
 			for j in x[i]:
 				cflp += x[i][j] == pulp.LpVariable(f'b_{i}_{j}', cat=pulp.LpBinary)
+	# '''			
 
 	cflp += pulp.lpSum(fixed_cost * y[i] + pulp.lpSum(g[i][j] * x[i][j] for j in g[i]) for i in I) # função objetivo: minimizar os custos fixos das facilidades abertas e os custos de transporte para os clientes atendidos		
 	
@@ -146,7 +156,7 @@ def read_mess (file, prefix = 'CFLP', single_source = False, incompatible_pairs 
 	y = {i: pulp.LpVariable(f'y_{i}', 0, 1, pulp.LpBinary) for i in I}
 
 	# quantas unidades a facilidade i serve para o cliente j
-	x = {i: {j: pulp.LpVariable(f'x_{i}_{j}', 0, cat=pulp.LpInteger) for j in J} for i in I}
+	x = {i: {j: ((d[j] if single_source else 1) * pulp.LpVariable(f'x_{i}_{j}', 0, cat=pulp.LpBinary if single_source else pulp.LpInteger)) for j in J} for i in I}
 
 	for i in I: # respeita as capacidades das facilidades abertas
 		cflp += pulp.lpSum(x[i][j] for j in J) <= y[i] * s[i]
@@ -183,11 +193,13 @@ def read_mess (file, prefix = 'CFLP', single_source = False, incompatible_pairs 
 	else:		
 		print('Ignoring incompatible pairs')
 		
+	'''	
 	if single_source:
 		print('Single source version')
 		for i in I:
 			for j in J:
-				cflp += x[i][j] == d[j] * pulp.LpVariable(f'b_{i}_{j}', cat=pulp.LpBinary)  
+				cflp += x[i][j] == pulp.LpVariable(f'b_{i}_{j}', cat=pulp.LpBinary)  
+	# '''			
 
 				
 
@@ -217,52 +229,61 @@ def read_beasley (file, prefix = 'CFLP', single_source = False):
 	y = {} # se a facilidade está aberta 
 
 	for i in I:
+	#	print('Facilidade',i)
 		s[i] = float(next(input))
 		f[i] = float(next(input))
+	#	print('Capacidade:',s[i])
+	#	print('Custo fixo:',f[i],'\n')
 
 		y[i] = pulp.LpVariable(f'y_{i}', cat=pulp.LpBinary)
 		x[i] = {}
 		c[i] = {}
 		
 
-	for j in J:
+	for j in J: # as demandas de todos os clientes primeiro
 		d[j] = float(next(input))	
-	for j in J:	
-		for i in I:
+	#	print('Cliente',j,'\tDemanda:',d[j])
+	for i in I:
+		for j in J:				
+		
 			c[i][j] = float(next(input))
-			x[i][j] = pulp.LpVariable(f'x_{i}_{j}', 0, cat=pulp.LpInteger)
+			x[i][j] = pulp.LpVariable(f'x_{i}_{j}', 0, cat=(pulp.LpBinary if single_source else pulp.LpInteger)) * (d[j] if single_source else 1) #)
 
 	for i in I: # respeita as capacidades das facilidades abertas
 		cflp += pulp.lpSum(x[i][j] for j in J) <= y[i] * s[i]
 
 	for j in J:	# satisfaz as demandas  
-		cflp += pulp.lpSum(x[i][j] for i in I) >= d[j]
+		cflp += pulp.lpSum(x[i][j] for i in I) == d[j]
 
+	'''
 	if single_source:	
 		print('Single source version')
 		for i in I:
 			for j in J:
 				cflp += pulp.LpVariable(f'b_{i}_{j}', cat=pulp.LpBinary) * d[j] == x[i][j]
+	# '''			
 
 	
 
 	cflp += pulp.lpSum(c[i][j] * x[i][j] / d[j] for i in I for j in J) + pulp.lpSum(f[i] * y[i] for i in I)
 	
-	'''
+	#'''
 	with open('istanze.log', 'w') as instance_log:
-		print('Capacity/FixedCost =', {i:(s[i], f[i]) for i in I}, file=instance_log)		
+		print('Capacity/FixedCost = \n\t', {i:(s[i], f[i]) for i in I}, file=instance_log)		
 				
 		print('Goods =', d, file=instance_log)
-		print('TotalSupplyCost =', {(j,i): c[i][j] for i in c for j in c[i]}, sep='\n\t', file=instance_log)
+		print('TotalSupplyCost = \n\t', {(j,i): c[i][j] for i in c for j in c[i]}, file=instance_log)
 		
-		print(cflp, file=instance_log)
+		print('\n\n', cflp, file=instance_log)
 	#'''
 
 	return cflp, x, y
 	
 	
 	
-file_format = {'SOBOLEV': read_sobolev, 'BEASLEY': read_beasley, 'MESS': read_mess}	
+file_format = {'SOBOLEV': read_sobolev, 
+	       'BEASLEY': read_beasley, 'HOLMBERG': read_beasley, 
+		   'MESS': read_mess}	
 	
 	
 		
@@ -300,6 +321,9 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 		file_name = outdir + file_name
 	file_name += f'({time_limit if time_limit else ""})'
 	
+	#instance.writeMPS('cflp.mps')
+	#print(instance, file=open('cflp.model', 'w'))
+
 	solvers = {
 		'cplex': pulp.CPLEX_CMD(logPath=file_name + '.cplex.sol.log', msg=False, timeLimit=time_limit),
 		'gurobi': pulp.GUROBI_CMD(logPath=file_name + '.gurobi.sol.log', msg=False, timeLimit=time_limit), 
