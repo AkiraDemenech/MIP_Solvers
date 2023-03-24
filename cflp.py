@@ -162,7 +162,8 @@ def read_mess (file, prefix = 'CFLP', single_source = False, incompatible_pairs 
 		cflp += pulp.lpSum(x[i][j] for j in J) <= y[i] * s[i]
 
 	for j in J:	# satisfaz as demandas  
-		cflp += pulp.lpSum(x[i][j] for i in I) >= d[j]
+		scale = d[j] if single_source else 1
+		cflp += pulp.lpSum(x[i][j] for i in I)/scale >= d[j]/scale
 
 	cflp += pulp.lpSum(c[j][i] * x[i][j] for i in I for j in J) + pulp.lpSum(f[i] * y[i] for i in I)
 
@@ -254,6 +255,8 @@ def read_beasley (file, prefix = 'CFLP', single_source = False):
 
 	for j in J:	# satisfaz as demandas  
 		cflp += pulp.lpSum(x[i][j] for i in I) == d[j]
+		scale = d[j] if single_source else 1
+		cflp += pulp.lpSum(x[i][j] for i in I)/scale == d[j]/scale
 
 	'''
 	if single_source:	
