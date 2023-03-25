@@ -254,7 +254,6 @@ def read_beasley (file, prefix = 'CFLP', single_source = False):
 		cflp += pulp.lpSum(x[i][j] for j in J) <= y[i] * s[i]
 
 	for j in J:	# satisfaz as demandas  
-		cflp += pulp.lpSum(x[i][j] for i in I) == d[j]
 		scale = d[j] if single_source else 1
 		cflp += pulp.lpSum(x[i][j] for i in I)/scale == d[j]/scale
 
