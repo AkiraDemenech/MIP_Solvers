@@ -9,8 +9,8 @@ import time
 import traceback
 
 '''
-if time.localtime()[3] >= 18:
-	exit(1) if input('Continue?').strip().upper()[0] == 'N' else print('Continue....') # nice stop
+#if time.localtime()[3] >= 18:
+exit(1) if input('Continue?').strip().upper()[0] == 'N' else print('Continue....') # nice stop
 # '''
 
 def matrix_to_vector (M):
@@ -73,7 +73,6 @@ def read_sobolev (file, prefix = 'CFLP', single_source = True):
 	for j in J:			  
 		cflp += pulp.lpSum(x[i][j] for i in I if j in p[i] and p[i][j] > 0) >= 1	# demanda atendida por pelo menos uma fonte	(fonte única, pois os custos serão minimizados)		
 				
-	
 	'''
 	if single_source:
 		print('Single source version')
@@ -329,7 +328,6 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 	solvers = {
 		'cplex': pulp.CPLEX_CMD(logPath=file_name + '.cplex.sol.log', msg=False, timeLimit=time_limit),
 		'gurobi': pulp.GUROBI_CMD(logPath=file_name + '.gurobi.sol.log', msg=False, timeLimit=time_limit), 
-		
 		 		
 	#	'scip': pulp.SCIP_CMD(options=['-l', './' + file_name + '.scip.sol.log'], msg=False, timeLimit=time_limit, path=r'C:/Program Files/SCIPOptSuite 8.0.1/bin/scip.exe'), # colocar o caminho exato do SCIP no dispositivo que for executar 
 		'pulp_cbc': pulp.PULP_CBC_CMD(logPath= file_name + '.pulp_cbc.sol.log', msg=False, timeLimit=time_limit) # CBC precisa ser a parte final do nome do solver no dicionário e no log, sendo separado dos termos anteriores por _ ou -  
@@ -347,7 +345,6 @@ def solve (read, input, outdir='', output=sys.stdout, time_limit = None, **readi
 		print('\n[%02d/%02d/%02d' %now[:3][::-1], '%02d:%02d:%02d]\t' %now[3:6],s)
 		print('\n[%02d/%02d/%02d' %now[:3][::-1], '%02d:%02d:%02d]\t' %now[3:6],s.upper(), 'at', file_log, file=output)
 		log = open(file_log,'w')
-		
 		
 		
 		try:
