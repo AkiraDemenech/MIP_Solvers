@@ -2,6 +2,100 @@
 readonly TMOUT=-1
 export TMOUT
   
+python3 cflp.py sobolev cap/10/1Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/1Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/1Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/2Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/2Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/2Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/3Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/3Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/3Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/4Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/4Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/4Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/5Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/5Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/5Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/6Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/6Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/6Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/7Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/7Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/7Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/8Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/8Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/8Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/9Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/9Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/9Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/10Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/10Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/10Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/11Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/11Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/11Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/12Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/12Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/12Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/13Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/13Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/13Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/14Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/14Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/14Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/15Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/15Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/15Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/16Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/16Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/16Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/17Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/17Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/17Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/18Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/18Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/18Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/19Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/19Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/19Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/10/20Cap10.txt 	 120  
+python3 cflp.py sobolev cap/10/20Cap10.txt 	 300  
+python3 cflp.py sobolev cap/10/20Cap10.txt 	 600  
+
+python3 cflp.py sobolev cap/20/1Cap20.txt 	 120  
+python3 cflp.py sobolev cap/20/1Cap20.txt 	 300  
+python3 cflp.py sobolev cap/20/1Cap20.txt 	 600  
+
+python3 cflp.py sobolev cap/20/2Cap20.txt 	 120  
+python3 cflp.py sobolev cap/20/2Cap20.txt 	 300  
+python3 cflp.py sobolev cap/20/2Cap20.txt 	 600  
+
+python3 cflp.py sobolev cap/20/3Cap20.txt 	 120  
+python3 cflp.py sobolev cap/20/3Cap20.txt 	 300  
+python3 cflp.py sobolev cap/20/3Cap20.txt 	 600  
+
+python3 cflp.py sobolev cap/20/4Cap20.txt 	 120  
+python3 cflp.py sobolev cap/20/4Cap20.txt 	 300  
 python3 cflp.py sobolev cap/20/4Cap20.txt 	 600  
 
 python3 cflp.py sobolev cap/20/5Cap20.txt 	 120  
@@ -307,5 +401,7 @@ python3 cflp.py sobolev cap/50/19Cap50.txt 	 600
 python3 cflp.py sobolev cap/50/20Cap50.txt 	 120  
 python3 cflp.py sobolev cap/50/20Cap50.txt 	 300  
 python3 cflp.py sobolev cap/50/20Cap50.txt 	 600  
+
+  
 
 echo Successfully finished!
