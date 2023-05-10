@@ -28,7 +28,7 @@ def open_table (f, sol, tlim):
 	& & &''')			
 	print(*[' \\multicolumn{' + str(len(tlim)) + '}{c}{\\textbf{' + s + '}} ' for s in sol], sep='&', end='\t\\\\', file=f)
 
-	print(file=f, end='Instâncias & & ')
+	print(file=f, end='\\textit{Instâncias} & & ')
 	for s in sol:
 		for t in tlim:
 			print(file=f, end='& \\textbf{'+str(t)+'} ')
@@ -39,7 +39,7 @@ def table_instance (f, sol, tlim, inst, dat):
 	width = (3 + (len(sol) * len(tlim)))
 	multirow = str(sum(len(d) if type(d) == dict else 1 for d in dat))
 	print('\\hline', file=f)
-	print(file=f, end='\\multirow{'+multirow+'}{*}{\\textbf{'+inst+'}}')
+	print(file=f, end='\\multirow{'+multirow+'}{*}{\\texttt{'+inst+'}}')
 
 	for d in dat:
 		print(d)
