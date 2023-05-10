@@ -152,7 +152,6 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 					for col in med} 
 				for tl in time_limits} 
 			for s in solvers}
-		
 
 	dados = {}	
 
@@ -183,7 +182,6 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 			print('\t#Fact\t', fact) # não são NaN (existe gap, existe solução)
 			print('\t#OfM\t', sol) # travou nesses 
 			print('\t#Total\t', total)
-			
 	#if len({dados['\\#Total'][st] for st in dados['\\#Total']}) <= 1:
 	#	dados.pop('\\#Total') # excluir a linha de total se forem todos iguais 				
 	#print(dados)
