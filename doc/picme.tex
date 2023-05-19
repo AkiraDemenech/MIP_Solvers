@@ -70,7 +70,8 @@
 				Essa maior restrição permite mais adequadamente a modelagem de relações lógicos e funções lineares por partes. 
 				
 			\item \textbf{Estudo do método \textit{branch-and-bound}}:
-				ramificar e limitar
+				ramificar e limitar descreve o processo de selecionar variáveis para dividir a região factível e buscar limitantes mais precisos.
+				São aplicadas múltiplas vezes o método simplex (relaxando linearmente as variáveis inteiras) para obter vértices lineares mais próximos da solução ótima mista, descartando as partes da região em que o limitante não permita haver solução melhor que o melhor limitante conhecido naquele passo.
 				
 			\item \textbf{Estudo da configuração padrão e dos recursos disponíveis de cada pacote computacional escolhido}: 
 				foram escolhidos dois resolvedores comerciais (\solver{CPLEX} \cite{CPLEX} e \solver{Gurobi} \cite{Gurobi}) e dois de código-aberto (\solver{Cbc} \cite{Cbc} e \solver{SCIP} \cite{SCIP}).
@@ -104,6 +105,8 @@
 		Se não forem definidas outras restrições além da capacidade das facilidades e da demanda dos clientes, nada impede que a demanda de um cliente seja satisfeita designando mais do que uma facilidade para ele, o que caracteriza o CFLP com múltiplas fontes (\textit{multi-source}, MS-CFLP) [\ref{defmodel:cflp:ms}].  
 		
 		Quando cada demanda deve ser atendida por somente uma facilidade, tem-se o CFLP com fonte única (\textit{single-source}, SS-CFLP) [\ref{defmodel:cflp:ss}]. 
+		
+		Quando houver clientes que não possam ser atendidos por uma mesma facilidade, tem-se o CFLP com incompatibilidade de clientes (\textit{customer incompatibilities}, CFLP-CI) [\ref{defmodel:cflp:ci}].
 		 
 		\subsection{MS-CFLP: problema de localização de facilidades com capacidade limitada e múltiplas fontes} \label{defmodel:cflp:ms}
 		
@@ -225,6 +228,11 @@
  				Embora tenha mudado a representação, não houve alteração nos dados de custo de atendimento. 
  				Pode-se substituir, neste modelo, $g_{ij} = c_{ij} p_{ij}$ e, no MS-CFLP [\ref{defmodel:cflp:ms}], $g_{ij} = c_{ij} d_j$.
  			\end{observation}
+ 		
+ 			\begin{observation} \label{cflp:ss:obs:ms}
+ 				A relaxação linear das variáveis $x_{ij} \in \mathbb{R}$ permitiria a representação de um modelo MS-CFLP [\ref{defmodel:cflp:ms}] com unidades divisíveis.  
+ 				Contudo, devido à variação da demanda de um mesmo cliente para cada facilidade que o possa atender, esse relaxação modelaria uma situação incomum e estranha. Dessa forma, não utilizaremos instâncias desse formato como se não tivessem a restrição de fonte única.
+	 		\end{observation}	
  		
  			\subsubsection{De MS-CFLP para SS-CFLP} \label{defmodel:cflp:ms:ss}
  				Para utilizar dados de uma instância do MS-CFLP [\ref{defmodel:cflp:ms}] e utilizá-la SS-CFLP, basta que, para todo $i \in I$ e $j \in J$, $p_{ij} = d_j$ e $g_{ij} = c_{ij} p_{ij} = c_{ij} d_j$ (conforme a observação \ref{cflp:ss:obs:gc}).
