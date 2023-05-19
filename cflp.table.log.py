@@ -71,9 +71,8 @@ def table_instance (f, sol, tlim, inst, dat):
 			print('\\\\', file=f)		
 	#print('\\hline ' * 2, file=f)	
 
-def close_table (f):	
-	print('\t\\end{tabular}\n\t\\end{adjustbox}\n\\end{table}\n',file=f)
-
+def close_table (f, id = 0, caption = ''):	
+	print('\t\\end{tabular}\n\t\\end{adjustbox}\n\t\\label{cflp:tab:'+str(id)+'}\n\t\\caption{'+caption+'}\n\\end{table}\n',file=f)
 	#f.close()
 	
 
@@ -125,10 +124,12 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 	if solvers != solvers_ln or time_limits != time_limits_subln or tn > 2:
 		solvers_ln = solvers 
 		time_limits_subln = time_limits
+		
+		close_table(table, table_inst)
 		table_inst += tn
-		close_table(table)
-		table = open_table(str(table_inst) + '.' + ('-'.join(str(s) for s in solvers)) + '.' + ('_'.join(str(tl) for tl in time_limits)) + '.cflp.table.tex', solvers, time_limits)
 		tn = 0
+		table = open_table(str(table_inst) + '.' + ('-'.join(str(s) for s in solvers)) + '.' + ('_'.join(str(tl) for tl in time_limits)) + '.cflp.table.tex', solvers, time_limits)
+		
 	
 
 	print('Solvers:\t', solvers, '\nTime limits:\t', time_limits)

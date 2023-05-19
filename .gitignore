@@ -12,6 +12,7 @@ cap/GalvaoData
 *.out
 *.nav
 *.snm
+*.lot
 doc/img/
 
 # Byte-compiled / optimized / DLL files
