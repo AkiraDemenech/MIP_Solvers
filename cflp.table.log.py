@@ -128,7 +128,7 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 		close_table(table, table_inst)
 		table_inst += tn
 		tn = 0
-		table = open_table(str(table_inst) + '.' + ('-'.join(str(s) for s in solvers)) + '.' + ('_'.join(str(tl) for tl in time_limits)) + '.cflp.table.tex', solvers, time_limits)
+		table = open_table('doc/' + str(table_inst) + '.' + ('-'.join(str(s) for s in solvers)) + '.' + ('_'.join(str(tl) for tl in time_limits)) + '.cflp.table.tex', solvers, time_limits)
 		
 	
 
