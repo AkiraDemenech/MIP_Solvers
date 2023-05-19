@@ -6,6 +6,7 @@ cap/GalvaoData
 
 # LaTeX files 
 *.synctex.gz 
+*.synctex(busy) 
 *.blg
 *.bbl
 *.toc

@@ -26,8 +26,9 @@ def open_table (f, sol, tlim):
 % \\usepackage{adjustbox}
 % \\usepackage{multirow}
 \\begin{table}[]
+	\\begin{footnotesize}
 	\\begin{adjustbox}{angle=90}
-	\\begin{tabular}{cll''' + tabular + '''}
+	\\begin{tabular}{c@{\\hskip 0.2cm}l@{\\hskip 0.1cm}l''' + tabular + '''}
 	& & &''')			
 	print(*[' \\multicolumn{' + str(len(tlim)) + '}{c}{\\textbf{' + s + '}} ' for s in sol], sep='&', end='\t\\\\', file=f)
 
@@ -72,7 +73,7 @@ def table_instance (f, sol, tlim, inst, dat):
 	#print('\\hline ' * 2, file=f)	
 
 def close_table (f, id = 0, caption = ''):	
-	print('\t\\end{tabular}\n\t\\end{adjustbox}\n\t\\label{cflp:tab:'+str(id)+'}\n\t\\caption{'+caption+'}\n\\end{table}\n',file=f)
+	print('\t\\end{tabular}\n\t\\end{adjustbox}\n\t\\end{footnotesize}\n\t\\label{cflp:tab:'+str(id)+'}\n\t\\caption{'+caption+'}\n\\end{table}\n',file=f)
 	#f.close()
 	
 
@@ -199,4 +200,5 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 close_table(table)
 		
 
+input('Press enter to continue....')
 	 

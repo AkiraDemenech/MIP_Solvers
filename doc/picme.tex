@@ -85,11 +85,13 @@
 				Como várias facilidades podem entregar produtos para um mesmo cliente, chama-se a versão geral do problema de múltiplas fontes (MS-CFLP).
 				A variação de fonte única (SS-CFLP) do problema adiciona a restrição de fornecedores por cliente: somente uma facilidade deve atender cada demanda.
 			
-			\item \textbf{Estudo de uma técnica de decomposição de um problema prático e o surgimento do modelo escolhido como subproblema} %?
+			 
 			
 			\item \textbf{Testes computacionais e avaliação comparativa dos resultados}:
 				o \textit{script} desenvolvido lê as instâncias de \textit{benchmark} utilizadas por outros estudos do MS-CFLP e SS-CFLP, monta o modelo misto e o executa em cada resolvedor com diferentes limites de tempo (2, 5 e 10 minutos para instâncias pequenas e 10, 30 e 60 para as grandes).    
 				Os resultados registrados nos arquivos de \textit{log} pelos resolvedores \solver{CPLEX}, \solver{Gurobi} e \solver{Cbc} são extraídos com auxílio da biblioteca \python{Orloge} \cite{orloge} (que não oferece suporte para a saída do \solver{SCIP}) e tabelados.  
+				
+		%		\item \textbf{Estudo de uma técnica de decomposição de um problema prático e o surgimento do modelo escolhido como subproblema}
 				
 		\end{enumerate}
 \fi	
@@ -266,21 +268,27 @@
  			\end{equation}
 \fi
 
-\ifartigo		 
+		 
 	\section{Experimentos computacionais}
 	
 		
-			\input{1.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
-			\input{4.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
-			\input{5.CBC-CPLEX-GUROBI.600_1800_3600.cflp.table}
-			\input{6.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
-			\input{9.CBC-CPLEX-GUROBI.600_1800_3600.cflp.table}
 		
 		
-\fi		
 
+	\vfill
 	\section{Referências}
 		\bibliographystyle{apalike}
 		\bibliography{bibliografia.bib} % https://github.com/akirademenech/MIP_Solvers/blob/main/doc/bibliografia.bib
+		
+\ifartigo		
+	\vfill
+	\section{Tabelas}
+	\newpage
+		\input{1.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
+		\input{4.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
+		\input{5.CBC-CPLEX-GUROBI.600_1800_3600.cflp.table}
+		\input{6.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
+		\input{9.CBC-CPLEX-GUROBI.600_1800_3600.cflp.table}
+\fi		
 
 \end{document}

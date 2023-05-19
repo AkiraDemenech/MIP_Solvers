@@ -3,8 +3,9 @@
 % \usepackage{adjustbox}
 % \usepackage{multirow}
 \begin{table}[]
+	\begin{footnotesize}
 	\begin{adjustbox}{angle=90}
-	\begin{tabular}{cll|lll|lll|lll}
+	\begin{tabular}{c@{\hskip 0.2cm}l@{\hskip 0.1cm}l|lll|lll|lll}
 	& & & \multicolumn{3}{c}{\textbf{CBC}} & \multicolumn{3}{c}{\textbf{CPLEX}} & \multicolumn{3}{c}{\textbf{GUROBI}} 	\\\textit{Instâncias} & & & \textbf{120} & \textbf{300} & \textbf{600} & \textbf{120} & \textbf{300} & \textbf{600} & \textbf{120} & \textbf{300} & \textbf{600} \\
 \hline
 \multirow{7}{*}{\texttt{beasley.large.ss}} & \multirow{2}{*}{\textbf{Gap}} & \textbf{Média} & 80,44 & 80,05 & 55,24 & 4,24 & 1,01 & 0,58 & 5,36 & 1,13 & 0,53 \\
@@ -22,6 +23,7 @@
  & \textbf{\#TL} & & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
 	\end{tabular}
 	\end{adjustbox}
+	\end{footnotesize}
 	\label{cflp:tab:4}
 	\caption{}
 \end{table}
