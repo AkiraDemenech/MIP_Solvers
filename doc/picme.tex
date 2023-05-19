@@ -54,6 +54,7 @@
 	\section{Atividades desenvolvidas}
 	
 		Os estudos teóricos foram guiados pelos capítulos de Otimização Linear e Discreta de \textit{Pesquisa operacional} \cite{arenales}.	
+		Para os testes computacionais foi utilizada a linguagem de \textit{script} \python{Python} \cite{Python}, sendo feita leitura de instâncias e chamada dos resolvedores escolhidos.
 		
 		\begin{enumerate}
 			
@@ -76,7 +77,7 @@
 			\item \textbf{Estudo da configuração padrão e dos recursos disponíveis de cada pacote computacional escolhido}: 
 				foram escolhidos dois resolvedores comerciais (\solver{CPLEX} \cite{CPLEX} e \solver{Gurobi} \cite{Gurobi}) e dois de código-aberto (\solver{Cbc} \cite{Cbc} e \solver{SCIP} \cite{SCIP}).
 				Todos os resolvedores escolhidos aceitam modelos de otimização linear e inteira mista e aplicam de cortes. 
-				A interface de linha de comando deles pode ser acessada dentro do ambiente \python{Python} \cite{Python} pela biblioteca \python{PuLP} \cite{PuLP}.
+				A interface de linha de comando deles pode ser acessada dentro do ambiente \python{Python} pela biblioteca \python{PuLP} \cite{PuLP}.
 				
 			\item \textbf{Implementação de um modelo clássico de otimização utilizando os pacotes computacionais escolhidos}:
 				o problema de localização de facilidades com capacidade limitada (CFLP) minimizar o custo de transporte e de abertura de facilidades (como armazéns ou fábricas), respeitando suas capacidades pré-estabelecidas. 
