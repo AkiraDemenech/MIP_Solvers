@@ -4,6 +4,7 @@
 % Poderá ter até 5000 (cinco mil) palavras, considerando todas as seções do trabalho, inclusive título, resumo, referências e outras.
 
 \documentclass[]{article}
+\usepackage{hyperref}
 \usepackage{amsfonts} % number sets in math mode 
 \usepackage{multicol} 
 
@@ -12,6 +13,9 @@
 \usepackage{adjustbox}
 
 \newtheorem{observation}{Observação}
+
+\newcommand{ \solver }[1]{\textit{#1}} 
+\newcommand{ \python }[1]{\textit{#1}}
 
 % seções do relatório 
 \newif\ifrelatorio
@@ -48,15 +52,43 @@
 	
 \ifrelatorio	
 	\section{Atividades desenvolvidas}
+	
+		Os estudos teóricos foram guiados pelos capítulos de Otimização Linear e Discreta de \textit{Pesquisa operacional} \cite{arenales}.	
+		
 		\begin{enumerate}
+			
 			\item \textbf{Estudo de modelos de otimização linear}:
-			\item \textbf{Estudo de solução gráfica e método simplex}:
+				embora a modelagem linear seja bastante restrita, ela pode representar uma grande variedade de problemas de maneira exata ou como aproximação. 
+				As restrições desses modelos facilitam sua representação (como sistemas lineares ou matrizes) e oportunizam aos métodos de solução atalhos e generalizações eficientes e bem direcionados.
+				
+			\item \textbf{Estudo de solução gráfica e método primal simplex}:
+				para modelos com somente duas variáveis, a representação bidimensional permite resolução rápida e intuitiva dos problemas de otimização linear, basta identificar o gradiente da função objetivo e a região factível, encontrando a curva de nível (neste caso, o hiperplano perpendicular ao gradiente) no limite da factibilidade no sentido de minimização/maximização. 
+				O método simplex aborda o problema considerando que, se houver solução ótima, haverá ao menos um vértice ótimo. Partindo de uma partição básica factível inicial, segue pelas arestas que mais tentem à otimalidade (seja menor ou maior), observando se houver solução e se ela for limitada. 
+				
 			\item \textbf{Estudo de modelos de otimização inteira}:
+				muitos problemas precisam de variáveis binárias ou discretas, geralmente representando escolhas e unidades indivisíveis. 
+				Essa maior restrição permite mais adequadamente a modelagem de relações lógicos e funções lineares por partes. 
+				
 			\item \textbf{Estudo do método \textit{branch-and-bound}}:
-			\item \textbf{Estudo da configuração padrão e dos recursos disponíveis de cada pacote computacional escolhido}:
+				ramificar e limitar
+				
+			\item \textbf{Estudo da configuração padrão e dos recursos disponíveis de cada pacote computacional escolhido}: 
+				foram escolhidos dois resolvedores comerciais (\solver{CPLEX} \cite{CPLEX} e \solver{Gurobi} \cite{Gurobi}) e dois de código-aberto (\solver{Cbc} \cite{Cbc} e \solver{SCIP} \cite{SCIP}).
+				Todos os resolvedores escolhidos aceitam modelos de otimização linear e inteira mista e aplicam de cortes. 
+				A interface de linha de comando deles pode ser acessada dentro do ambiente \python{Python} \cite{Python} pela biblioteca \python{PuLP} \cite{PuLP}.
+				
 			\item \textbf{Implementação de um modelo clássico de otimização utilizando os pacotes computacionais escolhidos}:
-			\item \textbf{Estudo de uma técnica de decomposição de um problema prático e o surgimento do modelo escolhido como subproblema}:
+				o problema de localização de facilidades com capacidade limitada (CFLP) minimizar o custo de transporte e de abertura de facilidades (como armazéns ou fábricas), respeitando suas capacidades pré-estabelecidas. 
+				Dados os clientes e as demandas que devem ser satisfeitas, designa-se as facilidades que devem ser abertas, que os devem atender e quanto devem entregar.  
+				Como várias facilidades podem entregar produtos para um mesmo cliente, chama-se a versão geral do problema de múltiplas fontes (MS-CFLP).
+				A variação de fonte única (SS-CFLP) do problema adiciona a restrição de fornecedores por cliente: somente uma facilidade deve atender cada demanda.
+			
+			\item \textbf{Estudo de uma técnica de decomposição de um problema prático e o surgimento do modelo escolhido como subproblema} %?
+			
 			\item \textbf{Testes computacionais e avaliação comparativa dos resultados}:
+				o \textit{script} desenvolvido lê as instâncias de \textit{benchmark} utilizadas por outros estudos do MS-CFLP e SS-CFLP, monta o modelo misto e o executa em cada resolvedor com diferentes limites de tempo (2, 5 e 10 minutos para instâncias pequenas e 10, 30 e 60 para as grandes).    
+				Os resultados registrados nos arquivos de \textit{log} pelos resolvedores \solver{CPLEX}, \solver{Gurobi} e \solver{Cbc} são extraídos com auxílio da biblioteca \python{Orloge} \cite{orloge} (que não oferece suporte para a saída do \solver{SCIP}) e tabelados.  
+				
 		\end{enumerate}
 \fi	
 
@@ -68,7 +100,7 @@
 \ifartigo	
 	\section{Definição e modelagem dos problemas} \label{defmodel:cflp}
 	
-		No problema da localização de facilidades com capacidade limitada (\textit{Capacitated Facility Location Problem}, CFLP) são minimizados os custos de instalação de facilidades e de designação de clientes a elas, de forma a respeitar as limitações de capacidade das facilidades e a satisfazer as demandas dos clientes.      
+		No problema de localização de facilidades com capacidade limitada (\textit{Capacitated Facility Location Problem}, CFLP) são minimizados os custos de instalação de facilidades e de designação de clientes a elas, de forma a respeitar as limitações de capacidade das facilidades e a satisfazer as demandas dos clientes.      
 		Se não forem definidas outras restrições além da capacidade das facilidades e da demanda dos clientes, nada impede que a demanda de um cliente seja satisfeita designando mais do que uma facilidade para ele, o que caracteriza o CFLP com múltiplas fontes (\textit{multi-source}, MS-CFLP) [\ref{defmodel:cflp:ms}].  
 		
 		Quando cada demanda deve ser atendida por somente uma facilidade, tem-se o CFLP com fonte única (\textit{single-source}, SS-CFLP) [\ref{defmodel:cflp:ss}]. 
@@ -199,6 +231,7 @@
  				
  				Os demais dados são os mesmos para ambos. 
  				
+ 			    
  				
  		\subsection{MS-CFLP-CI: problema de localização de facilidades com capacidade limitada e incompatibilidade de clientes} \label{defmodel:cflp:ci}	
  		
