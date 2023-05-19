@@ -1,0 +1,26 @@
+
+% Please add the following required packages to your document preamble:
+% \usepackage{adjustbox}
+% \usepackage{multirow}
+\begin{table}[]
+	\begin{adjustbox}{angle=90}
+	\begin{tabular}{cll|lll|lll|lll}
+	& & & \multicolumn{3}{c}{\textbf{CBC}} & \multicolumn{3}{c}{\textbf{CPLEX}} & \multicolumn{3}{c}{\textbf{GUROBI}} 	\\\textit{Instâncias} & & & \textbf{120} & \textbf{300} & \textbf{600} & \textbf{120} & \textbf{300} & \textbf{600} & \textbf{120} & \textbf{300} & \textbf{600} \\
+\hline
+\multirow{7}{*}{\texttt{beasley.large.ss}} & \multirow{2}{*}{\textbf{Gap}} & \textbf{Média} & 80,44 & 80,05 & 55,24 & 4,24 & 1,01 & 0,58 & 5,36 & 1,13 & 0,53 \\
+ & & \textbf{Mediana} & 78,50 & 78,06 & 77,94 & 3,13 & 0 & 0 & 5,27 & 0,41 & 0 \\
+\cline{2-12}
+ & \multirow{2}{*}{\textbf{Time}} & \textbf{Média} & 129,87 & 313,05 & 609,31 & 120,05 & 241,57 & 322,60 & 120,11 & 292,33 & 446,46 \\
+ & & \textbf{Mediana} & 128,53 & 308,43 & 601,07 & 120,04 & 256,37 & 252,09 & 120,02 & 300,01 & 452,43 \\
+\cline{2-12}
+ & \multirow{2}{*}{\textbf{Nodes}} & \textbf{Média} & 0 & 1,58 & 128,83 & 77,58 & 1376,33 & 2211,25 & 1279,75 & 1858,75 & 3475,42 \\
+ & & \textbf{Mediana} & 0 & 0 & 4,50 & 0 & 1079,50 & 1886 & 1284 & 1367 & 2813,50 \\
+\cline{2-12}
+ & \textbf{\#Opt} & & 0 & 0 & 0 & 0 & 7 & 9 & 0 & 3 & 9 \\
+ & \textbf{\#Fact} & & 12 & 12 & 12 & 12 & 12 & 12 & 12 & 12 & 12 \\
+ & \textbf{\#OfM} & & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ & \textbf{\#TL} & & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+	\end{tabular}
+	\end{adjustbox}
+\end{table}
+

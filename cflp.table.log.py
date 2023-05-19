@@ -1,5 +1,6 @@
 from matplotlib import pyplot 
 import pandas
+import sys 
 
 comma = lambda x: int(x) if type(x) == int or x.is_integer() else ('%.02f' %x).replace('.',',')
 
@@ -15,6 +16,8 @@ def avg (data):
 	return {'Média':(sum(num) / len(num)), 'Mediana':((num[i] + num[j]) / 2)}
 
 def open_table (f, sol, tlim):	
+	if type(f) == str:
+		f = open(f, 'w', encoding='UTF-8')
 
 	tabular = len(sol) * ('|' + (len(tlim) * 'l')) 
 
@@ -35,6 +38,8 @@ def open_table (f, sol, tlim):
 			
 	print('\\\\', file=f)
 	#print('\\hline', file=f)
+	return f 
+
 def table_instance (f, sol, tlim, inst, dat):	
 	width = (3 + (len(sol) * len(tlim)))
 	multirow = str(sum(len(d) if type(d) == dict else 1 for d in dat))
@@ -69,6 +74,7 @@ def table_instance (f, sol, tlim, inst, dat):
 def close_table (f):	
 	print('\t\\end{tabular}\n\t\\end{adjustbox}\n\\end{table}\n',file=f)
 
+	#f.close()
 	
 
 
@@ -93,9 +99,10 @@ for source_type, source_type_label in [
 	]:	
 		csv_file_list.append((f'{csv_file_dir}/{instance_type}.{source_type}.cflp.log.csv', f'{instance_type_label} {source_type_label}', f'{instance_type}.{source_type}'))
 
-table = open('cflp.table.tex', 'w', encoding='UTF-8')
+table = sys.stdout
 time_limits_subln = solvers_ln = []
 tn = 0
+table_inst = 0
 open_table(table, solvers_ln, time_limits_subln)
 
 for csv_log, title, instance_source_type_code in csv_file_list:
@@ -118,8 +125,9 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 	if solvers != solvers_ln or time_limits != time_limits_subln or tn > 2:
 		solvers_ln = solvers 
 		time_limits_subln = time_limits
+		table_inst += tn
 		close_table(table)
-		open_table(table, solvers, time_limits)
+		table = open_table(str(table_inst) + '.' + ('-'.join(str(s) for s in solvers)) + '.' + ('_'.join(str(tl) for tl in time_limits)) + '.cflp.table.tex', solvers, time_limits)
 		tn = 0
 	
 
@@ -168,20 +176,20 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 					if not m in dados[c]:	
 						dados[c][m] = {}
 					dados[c][m][s,tl] = stats[s][tl][c][m]	
-			for d in ('\\#Opt', '\\#Fact', '\\#OfM', '\\#Total'):  		
+			for d in ('\\#Opt', '\\#Fact', '\\#OfM', '\\#TL'):  		
 				if not d in dados:
 					dados[d] = {}
 	
 			dados['\\#Opt'][s, tl] = opt = sum((gap == 0) for gap in med['gap'][s, tl])
 			dados['\\#Fact'][s, tl] = fact = sum((gap == gap) for gap in med['gap'][s, tl])
 			dados['\\#OfM'][s, tl] = sol = sum((t != t) for t in med['time'][s, tl])
-			dados['\\#Total'][s, tl] = total = len(med['time'][s, tl])
+			dados['\\#TL'][s, tl] = tl = len(med['time'][s, tl]) - sol - fact
 			
 
 			print('\t#Opt\t', opt) # otimalidade
 			print('\t#Fact\t', fact) # não são NaN (existe gap, existe solução)
 			print('\t#OfM\t', sol) # travou nesses 
-			print('\t#Total\t', total)
+			print('\t#TL\t', tl)
 	#if len({dados['\\#Total'][st] for st in dados['\\#Total']}) <= 1:
 	#	dados.pop('\\#Total') # excluir a linha de total se forem todos iguais 				
 	#print(dados)

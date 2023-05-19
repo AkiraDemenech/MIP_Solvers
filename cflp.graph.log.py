@@ -3,16 +3,28 @@ import pandas
 
 csv = {}
 #cbc_gap = {}
-for csv_log, title in [
-	('cflp.sobolev.log.csv',	'Sobolev single-source'),
-	('cflp.beasley.ss.log.csv',	'Beasley single-source'),
-	('cflp.beasley.ms.log.csv',	'Beasley multi-source'),
-	('cflp.mess.ms.ci.log.csv',	'MESS multi-sources with customer incompatibilities')]:
+csv_file_list = []
+csv_file_dir = 'eduardo'
+for source_type, source_type_label in [
+	('ss', 'single-source'),
+	('ms', 'multi-source')
+]:
+	for instance_type, instance_type_label in [
+		('mess', 'MESS'),
+		('sobolev', 'Sobolev'),
+		('holmberg', 'Holmberg et al.'),
+		('beasley', 'Beasley'),
+		('beasley.small', 'Beasley small'),
+		('beasley.large', 'Beasley large')
+	]:	
+		csv_file_list.append((f'{csv_file_dir}/{instance_type}.{source_type}.cflp.log.csv', f'{instance_type_label} {source_type_label}'))
+
+for csv_log, title in csv_file_list:
 	dados = pandas.read_csv(csv_log, sep=';', decimal=',')
-	print(dados, '\n', csv_log)
+	print('\n', csv_log)
 
 	d = c = csv
-	for k in csv_log.strip().lower().split('.')[1:-2]:					
+	for k in csv_log.split('/')[-1].strip().lower().split('.')[1:-2]:					
 		d = c
 		if not k in c:	
 			c[k] = {}

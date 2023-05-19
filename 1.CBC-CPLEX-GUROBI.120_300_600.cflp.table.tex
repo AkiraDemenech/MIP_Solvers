@@ -1,0 +1,54 @@
+
+% Please add the following required packages to your document preamble:
+% \usepackage{adjustbox}
+% \usepackage{multirow}
+\begin{table}[]
+	\begin{adjustbox}{angle=90}
+	\begin{tabular}{cll|lll|lll|lll}
+	& & & \multicolumn{3}{c}{\textbf{CBC}} & \multicolumn{3}{c}{\textbf{CPLEX}} & \multicolumn{3}{c}{\textbf{GUROBI}} 	\\\textit{Instâncias} & & & \textbf{120} & \textbf{300} & \textbf{600} & \textbf{120} & \textbf{300} & \textbf{600} & \textbf{120} & \textbf{300} & \textbf{600} \\
+\hline
+\multirow{7}{*}{\texttt{sobolev.ss}} & \multirow{2}{*}{\textbf{Gap}} & \textbf{Média} & 4,68 & 2,12 & 0,12 & 0 & 0 & 0 & 0,01 & 0 & 0 \\
+ & & \textbf{Mediana} & 5,16 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\cline{2-12}
+ & \multirow{2}{*}{\textbf{Time}} & \textbf{Média} & 114,48 & 231,07 & 310,80 & 17,76 & 17,77 & 17,70 & 28,70 & 28,87 & 28,76 \\
+ & & \textbf{Mediana} & 119,91 & 275,41 & 274,85 & 14,44 & 14,47 & 14,49 & 19,77 & 19,75 & 19,73 \\
+\cline{2-12}
+ & \multirow{2}{*}{\textbf{Nodes}} & \textbf{Média} & 4383,73 & 8574,17 & 10707,35 & 12440,43 & 12440,43 & 12440,43 & 20989,02 & 21176,65 & 21176,65 \\
+ & & \textbf{Mediana} & 4261 & 9601 & 10410,50 & 9752 & 9752 & 9752 & 14843 & 14843 & 14843 \\
+\cline{2-12}
+ & \textbf{\#Opt} & & 16 & 57 & 86 & 100 & 100 & 100 & 99 & 100 & 100 \\
+ & \textbf{\#Fact} & & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\
+ & \textbf{\#OfM} & & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ & \textbf{\#TL} & & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\hline
+\multirow{7}{*}{\texttt{holmberg.ss}} & \multirow{2}{*}{\textbf{Gap}} & \textbf{Média} & 0,03 & 0,03 & 0,02 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ & & \textbf{Mediana} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\cline{2-12}
+ & \multirow{2}{*}{\textbf{Time}} & \textbf{Média} & 7,72 & 12,79 & 19,48 & 0,57 & 0,57 & 0,57 & 0,59 & 0,60 & 0,59 \\
+ & & \textbf{Mediana} & 0,36 & 0,36 & 0,35 & 0,14 & 0,14 & 0,14 & 0,13 & 0,13 & 0,13 \\
+\cline{2-12}
+ & \multirow{2}{*}{\textbf{Nodes}} & \textbf{Média} & 2103,03 & 3901,08 & 5994,70 & 718,46 & 718,46 & 718,46 & 747,58 & 747,58 & 747,58 \\
+ & & \textbf{Mediana} & 2 & 2 & 2 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\cline{2-12}
+ & \textbf{\#Opt} & & 69 & 69 & 70 & 71 & 71 & 71 & 71 & 71 & 71 \\
+ & \textbf{\#Fact} & & 71 & 71 & 71 & 71 & 71 & 71 & 71 & 71 & 71 \\
+ & \textbf{\#OfM} & & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ & \textbf{\#TL} & & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\hline
+\multirow{7}{*}{\texttt{beasley.small.ss}} & \multirow{2}{*}{\textbf{Gap}} & \textbf{Média} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ & & \textbf{Mediana} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\cline{2-12}
+ & \multirow{2}{*}{\textbf{Time}} & \textbf{Média} & 0,26 & 0,26 & 0,26 & 0,07 & 0,07 & 0,07 & 0,06 & 0,06 & 0,06 \\
+ & & \textbf{Mediana} & 0,17 & 0,17 & 0,17 & 0,04 & 0,04 & 0,04 & 0,04 & 0,04 & 0,04 \\
+\cline{2-12}
+ & \multirow{2}{*}{\textbf{Nodes}} & \textbf{Média} & 5,83 & 5,83 & 5,83 & 0,62 & 0,62 & 0,62 & 0 & 0 & 0 \\
+ & & \textbf{Mediana} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\cline{2-12}
+ & \textbf{\#Opt} & & 24 & 24 & 24 & 24 & 24 & 24 & 24 & 24 & 24 \\
+ & \textbf{\#Fact} & & 24 & 24 & 24 & 24 & 24 & 24 & 24 & 24 & 24 \\
+ & \textbf{\#OfM} & & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ & \textbf{\#TL} & & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+	\end{tabular}
+	\end{adjustbox}
+\end{table}
+
