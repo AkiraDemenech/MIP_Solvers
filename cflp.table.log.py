@@ -73,7 +73,7 @@ def table_instance (f, sol, tlim, inst, dat):
 	#print('\\hline ' * 2, file=f)	
 
 def close_table (f, id = 0, caption = ''):	
-	print('\t\\end{tabular}\n\t\\end{adjustbox}\n\t\\end{footnotesize}\n\t\\label{cflp:tab:'+str(id)+'}\n\t\\caption{'+caption+'}\n\\end{table}\n',file=f)
+	print('\t\\end{tabular}\n\t\\end{adjustbox}\n\t\\end{footnotesize}\n\t\\caption{'+caption+'}\n\t\\label{cflp:tab:'+str(id)+'}\n\\end{table}\n',file=f)
 	#f.close()
 	
 

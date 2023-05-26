@@ -6,7 +6,9 @@
 \documentclass[]{article}
 \usepackage{hyperref}
 \usepackage{amsfonts} % number sets in math mode 
+\usepackage{textcomp} % TM
 \usepackage{multicol} 
+
 
 % required for the tables:
 \usepackage{multirow}
@@ -271,8 +273,29 @@
 		 
 	\section{Experimentos computacionais}
 	
+		Foram escolhidos os resolvedores \solver{Cbc} \cite{Cbc}, \solver{CPLEX} \cite{CPLEX} e \solver{Gurobi} \cite{Gurobi} para comparação de otimalidade, tempo e nós visitados. 
+		Os dados para comparação são extraídos dos arquivos de \textit{log} com a biblioteca \python{Orloge} \cite{orloge}. 
+		Como ela não oferece suporte para leitura de \textit{log} do \solver{SCIP} \cite{SCIP}, esse resolvedor não foi incluído no estudo.
 		
+		Foram utilizadas instâncias do CFLP de quatro diferentes conjuntos:
+		\begin{enumerate}
+			\item \texttt{sobolev} \cite{sobolev}:	
+			\item \texttt{beasley} \cite{beasley}:
+			\item \texttt{holmberg} \cite{holmberg}:				
+			\item \texttt{mess} \cite{mess}:	
+		\end{enumerate} 
+	
+		As instâncias são lidas por um \textit{script} \python{Python} \cite{Python} que constrói o modelo de otimização mista da biblioteca \python{PuLP} \cite{PuLP} e executa os resolvedores pela interface de linha de comando.   
+		 
+		Cada instância de \texttt{sobolev}, \texttt{beasley} e \texttt{holmberg} foi resolvida três vezes, com os limites de tempo de 2, 5 e 10 minutos.
+		As instâncias de \texttt{mess} tiveram limitação maior, de 10, 30 e 60 minutos.
 		
+		Os testes foram conduzidos em um computador \textit{desktop} Dell XPS 8930 com sistema operacional Ubuntu 22.04.1 LTS 64-bit, processador Intel{\textregistered} Core{\texttrademark} i7-8700 CPU @ 3.20GHz $\times$ 12 e 16 GB de memória RAM.    		
+		\ifartigo
+			Os resultados estão nas tabelas \ref{cflp:tab:1}, \ref{cflp:tab:4}, \ref{cflp:tab:5}, \ref{cflp:tab:6} e \ref{cflp:tab:0}.
+		\fi	
+		
+		%E um \textit{laptop} Acer Aspire E5-574G com sistema operacional Windows 10 22H2 64-bit, processador Intel{\textregistered} Core{\texttrademark} i7-6500U CPU @ 2.50GHz 2.60GHz e 16 GB de memória RAM.
 		
 
 	\vfill
