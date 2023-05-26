@@ -1,10 +1,11 @@
 
 % Please add the following required packages to your document preamble:
-% \usepackage{adjustbox}
+% \usepackage{rotating}
 % \usepackage{multirow}
-\begin{table}[]
-	\begin{footnotesize}
-	\begin{adjustbox}{angle=90}
+%\begin{sidewaystable}[]
+	\begin{footnotesize}	
+	\caption{}
+	\label{cflp:tab:4}
 	\begin{tabular}{c@{\hskip 0.2cm}l@{\hskip 0.1cm}l|lll|lll|lll}
 	& & & \multicolumn{3}{c}{\textbf{CBC}} & \multicolumn{3}{c}{\textbf{CPLEX}} & \multicolumn{3}{c}{\textbf{GUROBI}} 	\\\textit{Instâncias} & & & \textbf{600} & \textbf{1800} & \textbf{3600} & \textbf{600} & \textbf{1800} & \textbf{3600} & \textbf{600} & \textbf{1800} & \textbf{3600} \\
 \hline
@@ -22,9 +23,6 @@
  & \textbf{\#OfM} & & 0 & 0 & 0 & 0 & 2 & 3 & 0 & 0 & 1 \\
  & \textbf{\#TL} & & 6 & 6 & 5 & 0 & 0 & 0 & 0 & 0 & 0 \\
 	\end{tabular}
-	\end{adjustbox}
 	\end{footnotesize}
-	\caption{}
-	\label{cflp:tab:5}
-\end{table}
+%\end{sidewaystable}
 

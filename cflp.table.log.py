@@ -2,6 +2,8 @@ from matplotlib import pyplot
 import pandas
 import sys 
 
+tab_id = 0
+
 comma = lambda x: int(x) if type(x) == int or x.is_integer() else ('%.02f' %x).replace('.',',')
 
 def avg (data):
@@ -15,19 +17,22 @@ def avg (data):
 
 	return {'Média':(sum(num) / len(num)), 'Mediana':((num[i] + num[j]) / 2)}
 
-def open_table (f, sol, tlim):	
+def open_table (f, sol, tlim, caption=''):	
 	if type(f) == str:
 		f = open(f, 'w', encoding='UTF-8')
+	global tab_id	
+	tab_id += 1
 
 	tabular = len(sol) * ('|' + (len(tlim) * 'l')) 
 
 	print(file=f, end='''
 % Please add the following required packages to your document preamble:
-% \\usepackage{adjustbox}
+% \\usepackage{rotating}
 % \\usepackage{multirow}
-\\begin{table}[]
-	\\begin{footnotesize}
-	\\begin{adjustbox}{angle=90}
+%\\begin{sidewaystable}[]
+	\\begin{footnotesize}	
+	\\caption{'''+caption+'''}
+	\\label{cflp:tab:'''+str(tab_id)+'''}
 	\\begin{tabular}{c@{\\hskip 0.2cm}l@{\\hskip 0.1cm}l''' + tabular + '''}
 	& & &''')			
 	print(*[' \\multicolumn{' + str(len(tlim)) + '}{c}{\\textbf{' + s + '}} ' for s in sol], sep='&', end='\t\\\\', file=f)
@@ -72,8 +77,8 @@ def table_instance (f, sol, tlim, inst, dat):
 			print('\\\\', file=f)		
 	#print('\\hline ' * 2, file=f)	
 
-def close_table (f, id = 0, caption = ''):	
-	print('\t\\end{tabular}\n\t\\end{adjustbox}\n\t\\end{footnotesize}\n\t\\caption{'+caption+'}\n\t\\label{cflp:tab:'+str(id)+'}\n\\end{table}\n',file=f)
+def close_table (f):	
+	print('\t\\end{tabular}\n\t\\end{footnotesize}\n%\\end{sidewaystable}\n',file=f)
 	#f.close()
 	
 
@@ -126,7 +131,7 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 		solvers_ln = solvers 
 		time_limits_subln = time_limits
 		
-		close_table(table, table_inst)
+		close_table(table)
 		table_inst += tn
 		tn = 0
 		table = open_table('doc/' + str(table_inst) + '.' + ('-'.join(str(s) for s in solvers)) + '.' + ('_'.join(str(tl) for tl in time_limits)) + '.cflp.table.tex', solvers, time_limits)

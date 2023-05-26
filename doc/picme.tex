@@ -12,12 +12,13 @@
 
 % required for the tables:
 \usepackage{multirow}
-\usepackage{adjustbox}
+\usepackage{rotating}
 
 \newtheorem{observation}{Observação}
 
 \newcommand{ \solver }[1]{\textit{#1}} 
 \newcommand{ \python }[1]{\textit{#1}}
+\newcommand{ \instance }[1]{\texttt{#1}}
 
 % seções do relatório 
 \newif\ifrelatorio
@@ -279,15 +280,39 @@
 		
 		Foram utilizadas instâncias do CFLP de quatro diferentes conjuntos:
 		\begin{enumerate}
-			\item \texttt{sobolev} \cite{sobolev}:	
-			\item \texttt{beasley} \cite{beasley}:
-			\item \texttt{holmberg} \cite{holmberg}:				
-			\item \texttt{mess} \cite{mess}:	
+			\item \instance{sobolev	} \cite{sobolev}: 	
+				esse conjunto de 100 instâncias do modelo SS-CFLP [\ref{defmodel:cflp:ss}] possui, para cada facilidade e cliente, diferentes demandas. 
+				\ifartigo
+					Foi utilizado somente com fonte única, apresentado na tabela \ref{cflp:tab:1} como \instance{sobolev	.ss}.
+				\fi	
+				Esse conjunto possui a peculiaridade de alguns pares de facilidade e cliente não terem demanda especificada, indicando que aquela facilidade não pode atender a esse cliente.
+				Ele é organizado em 5 grupos de 20 instâncias, tendo em cada um desses a mesma capacidade para todas as facilidades: 10, 20, 30, 40 e 50.
+				
+			\item \instance{beasley} \cite{beasley}:
+				há 36 instâncias do modelo MS-CFLP [\ref{defmodel:cflp:ms}], sendo as primeiras 24 muito pequenas e as 12 últimas, grandes.
+				Foi utilizado na forma MS-CFLP original e também com as restrições adicionais de SS-CFLP [\ref{defmodel:cflp:ms:ss}].
+				\ifartigo
+					Nas tabelas \ref{cflp:tab:1}, \ref{cflp:tab:4} e \ref{cflp:tab:6} é apresentado esse conjunto em partes: 
+					\instance{beasley.small.ms} e \instance{beasley.small.ss} referem-se às 24 instâncias menores, com múltiplas fontes (MS) e fonte única (SS);  
+					\instance{beasley.large.ms} e \instance{beasley.large.ss} são as 12 grandes, MS e SS.
+				\fi	
+				
+			\item \instance{holmberg} \cite{holmberg}:				
+				as 71 instâncias pequenas desse conjunto utilizam o mesmo formato do conjunto \instance{beasley}, também utilizado na forma original MS-CFLP [\ref{defmodel:cflp:ms}] e na adaptada para SS-CFLP [\ref{defmodel:cflp:ms:ss}].
+				\ifartigo
+					Estão apresentadas nas tabelas \ref{cflp:tab:1} e \ref{cflp:tab:6} como \instance{holmberg.ms} e \instance{holmberg.ss} para as soluções MS e SS.
+				\fi	
+				
+			\item \instance{mess} \cite{mess}:	
+				conjunto de 20 instâncias muito grandes no modelo MS-CFLP-CI [\ref{defmodel:cflp:ci}], utilizados como MS-CFLP [\ref{defmodel:cflp:ms}] e SS-CFLP [\ref{defmodel:cflp:ms:ss}].
+				\ifartigo
+					Chamado de \instance{mess.ms} e \instance{mess.ss} nas tabelas \ref{cflp:tab:5} e \ref{cflp:tab:0}
+				\fi	
 		\end{enumerate} 
 	
 		As instâncias são lidas por um \textit{script} \python{Python} \cite{Python} que constrói o modelo de otimização mista da biblioteca \python{PuLP} \cite{PuLP} e executa os resolvedores pela interface de linha de comando.   
 		 
-		Cada instância de \texttt{sobolev}, \texttt{beasley} e \texttt{holmberg} foi resolvida três vezes, com os limites de tempo de 2, 5 e 10 minutos.
+		Cada instância de \instance{sobolev	}, \instance{beasley} e \instance{holmberg} foi resolvida três vezes, com os limites de tempo de 2, 5 e 10 minutos.
 		As instâncias de \texttt{mess} tiveram limitação maior, de 10, 30 e 60 minutos.
 		
 		Os testes foram conduzidos em um computador \textit{desktop} Dell XPS 8930 com sistema operacional Ubuntu 22.04.1 LTS 64-bit, processador Intel{\textregistered} Core{\texttrademark} i7-8700 CPU @ 3.20GHz $\times$ 12 e 16 GB de memória RAM.    		
@@ -307,11 +332,20 @@
 	\vfill
 	\section{Tabelas}
 	\newpage
-		\input{1.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
-		\input{4.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
-		\input{5.CBC-CPLEX-GUROBI.600_1800_3600.cflp.table}
-		\input{6.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
-		\input{9.CBC-CPLEX-GUROBI.600_1800_3600.cflp.table}
+		\begin{sidewaystable}[]
+			\input{1.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
+		\end{sidewaystable}	
+		
+		\begin{sidewaystable}[]
+			\input{4.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
+			\input{5.CBC-CPLEX-GUROBI.600_1800_3600.cflp.table}
+			\input{9.CBC-CPLEX-GUROBI.600_1800_3600.cflp.table}
+		\end{sidewaystable}	
+		
+		\begin{sidewaystable}[]	
+			\input{6.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
+		\end{sidewaystable}		
+		
 \fi		
 
 \end{document}
