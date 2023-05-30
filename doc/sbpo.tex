@@ -1,0 +1,351 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{sbpo-template}
+\usepackage[brazil]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{url}
+\usepackage[square]{natbib}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+% pasta das imagens
+\graphicspath{ {./img/} }
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\includegraphics[width=\textwidth]{Logo_template.png}}
+\renewcommand{\headrulewidth}{0pt}
+\setlength\headheight{101.0pt}
+\addtolength{\textheight}{-101.0pt}
+\setlength{\headsep}{5mm}
+\setlength{\footskip}{4.08003pt}
+
+% required for the tables:
+\usepackage{multirow}
+\usepackage{rotating}
+
+\newtheorem{observation}{Observação}
+
+\newcommand{ \solver }[1]{\textit{#1}} 
+\newcommand{ \python }[1]{\textit{#1}}
+\newcommand{ \instance }[1]{\texttt{#1}}
+
+% seções do relatório 
+\newif\iffinal
+\finalfalse
+
+% seções do artigo 
+\newif\ifartigo
+\artigotrue
+
+\begin{document}
+	
+	\title{Avaliação de resolvedores para problemas de localização de facilidades com capacidade limitada} 
+	
+	\maketitle
+	\thispagestyle{fancy}
+	
+	\iffinal
+	\author{
+		\name{Guilherme Akira Demenech Mori}
+		\institute{Departamento de Computação -- Universidade Estadual de Londrina}
+		\iaddress{Rod. Celso Garcia Cid, PR-445, km 380, 86057-970, Londrina-PR, Brasil}
+		\email{akira.demenech@uel.br}
+	}
+	
+	\author{ 
+		\name{Aline A. S. Leão}
+		\institute{Departamento de Matemática -- Universidade Estadual de Londrina} 
+		\iaddress{Rod. Celso Garcia Cid, PR-445, km 380, 86057-970, Londrina-PR, Brasil}
+		\email {aasleao@uel.br}
+	}
+	\fi    
+	
+	\vspace{8mm}
+	\begin{resumo}
+		Este modelo resume as normas de formata\c c\~ao para os trabalhos completos a serem publicados
+		nos Anais do LII SBPO. T\'\i tulo, filia\c c\~ao, resumo e palavras-chave devem repetir fielmente
+		o que foi informado quando o autor cadastrou o artigo atrav\' es do sistema de submiss\~ao.
+		O Resumo deve ter no m\' aximo 150 palavras.
+	\end{resumo}
+	
+	\bigskip
+	\begin{palchaves}
+		Modelos de programação linear inteira mista. 
+		Localização de
+		facilidades com capacidade limitada. 
+		Softwares de otimização.
+		
+		\bigskip
+		\noindent{PM -- Programação Matemática}
+	\end{palchaves}
+	
+	
+	\vspace{8mm}
+	
+	\begin{abstract}
+		This document presents the format for full papers to be published in the Annals of the LII SBPO.
+		Title, affiliation, abstract and keywords must be exactly the same as the author informed when registered the paper through the submission system. 
+		The Abstract must not exceed 150 words.
+	\end{abstract}
+	
+	\bigskip
+	\begin{keywords}
+		Mixed-integer programming model. 
+		Capacitated Facility Location Problem. 
+		Optimization software.
+		
+		\bigskip
+		\noindent{MP -- Mathematical Programming}
+	\end{keywords}
+	
+	
+	\newpage
+	\section{Introdução} 
+	
+	
+	
+	
+	\section{Definição do problema}
+	
+	No problema de localização de facilidades com capacidade limitada (\textit{Capacitated Facility Location Problem}, CFLP) são minimizados os custos de instalação de facilidades e de designação de clientes a elas, de forma a respeitar as limitações de capacidade das facilidades e a satisfazer as demandas dos clientes.      
+	Se não forem definidas outras restrições além da capacidade das facilidades e da demanda dos clientes, nada impede que a demanda de um cliente seja satisfeita designando mais do que uma facilidade para ele, o que caracteriza o CFLP com múltiplas fontes (\textit{multi-source}, MS-CFLP) [\ref{defmodel:cflp:ms}].  
+	
+	Quando cada demanda deve ser atendida por somente uma facilidade, tem-se o CFLP com fonte única (\textit{single-source}, SS-CFLP) [\ref{defmodel:cflp:ss}]. 
+	
+	Quando houver clientes que não possam ser atendidos por uma mesma facilidade, tem-se o CFLP com incompatibilidade de clientes (\textit{customer incompatibilities}, CFLP-CI) [\ref{defmodel:cflp:ci}].
+	
+	\subsection{MS-CFLP: problema de localização de facilidades com capacidade limitada e múltiplas fontes} \label{defmodel:cflp:ms}
+	
+	São dados o conjunto de facilidades $I$ e o conjunto de clientes $J$.
+	Para cada facilidade $i \in I$, tem-se o custo de abertura $f_i \in \mathbb{R}$ e a capacidade máxima de atendimento $s_i \in \mathbb{Z}$. 
+	Tem-se também a demanda de produtos $d_j \in \mathbb{Z}$ para cada cliente $j \in J$.
+	Para cada par de facilidade e cliente $\langle i, j \rangle \in I \times J$, há o custo $c_{ij} \in \mathbb{R}$ do atendimento de $j$ por $i$ por unidade do produto demandado.  
+	
+	O modelo pode ser descrito da seguinte forma:
+	
+	\begin{equation}
+		\label{cflp:ms:obj}		
+		\min \sum_{i \in I} 
+		(
+		f_i y_i + \sum_{j \in J} c_{ij} x_{ij}
+		)
+	\end{equation}
+	
+	sujeito a 				
+	
+	\begin{equation}
+		\label{cflp:ms:const:demand}		
+		\sum_{i \in I} x_{ij} \ge d_j % == 
+		\quad
+		\forall j \in J
+	\end{equation}
+	
+	\begin{equation}
+		\label{cflp:ms:const:capacity}		
+		\sum_{j \in J} x_{ij} \le y_i s_i 
+		\quad
+		\forall i \in I
+	\end{equation}
+	
+	\begin{equation}
+		\label{cflp:ms:dom:var}		
+		y_i \in \{0, 1\}, 
+		\ x_{ij} \ge 0, 
+		\ x_{ij} \in \mathbb{Z}
+		\quad
+		\forall i \in I, \ j \in J
+	\end{equation}
+	
+	O atendimento da demanda do cliente $j \in J$ pela facilidade $i \in I$ é representado pela variável inteira não-negativa $x_{ij}$, cujo valor é a quantidade de unidades do produto são fornecidas por $i$ para $j$.
+	A restrição \ref{cflp:ms:const:demand} garante que a soma de todos os atendimentos de cada cliente por todas as facilidades satisfaça sua demanda $d_j$.
+	Os custos de atendimento são somados na função objetivo (\ref{cflp:ms:obj}) de acordo com o custo $c_{ij}$ por unidade. 		
+	
+	A abertura da facilidade $i \in I$ é representada pela variável binária $y_i$, que assume valor 0 quando $i$ estiver fechada e 1 se tiver sido instalada.
+	A restrição \ref{cflp:ms:const:capacity} exige que, se a soma dos atendimentos prestados por $i$ para todos os seus clientes for positiva, a facilidade deva ser aberta ($y_i = 1$). 
+	Essa restrição também limita a soma dos atendimentos à capacidade $s_i$ da facilidade.
+	O custo de instalação $f_i$ da facilidade será somado ao custo na função objetivo (\ref{cflp:ms:obj}) se $y_i = 1$.  
+	
+	\begin{observation} \label{cflp:ms:obs:int}
+		É importante ressaltar que esse modelo considera que o produto possui unidades indivisíveis e que, portanto, os atendimentos $x_{ij}$, as capacidades $s_i$ e as demandas $d_j$ são inteiros. 
+		
+		Caso fossem fornecidas capacidades reais $s'_i \in \mathbb{R}$, bastaria utilizar $s_i = \lfloor s'_i \rfloor$. 
+		Se fossem demandas reais $d'_j \in \mathbb{R}$, bastaria utilizar $d_j = \lceil d'_j \rceil$. 
+		
+		Contudo, sendo necessário utilizar valores fracionários de atendimento, capacidade e demanda, bastará alterar a restrição \ref{cflp:ms:dom:var} para que sejam reais as variáveis $x_{ij} \in \mathbb{R}$. 
+		A modelagem do problema funciona para atendimentos no domínio dos reais. 
+	\end{observation} 		 			
+	
+	\subsection{SS-CFLP: problema de localização de facilidades com capacidade limitada e fonte única} \label{defmodel:cflp:ss}		
+	
+	A modelagem pode ser essencialmente a mesma do MS-CFLP [\ref{defmodel:cflp:ms}], simplesmente se alterando o domínio de cada $x_{ij} \in \{ 0, d_j \}$ na restrição \ref{cflp:ms:dom:var}. 
+	Porém a restrição para uma única fonte permite algumas alterações razoáveis.
+	
+	Novamente são dados o conjunto de facilidades $I$ e o conjunto de clientes $J$, bem como o custo de abertura $f_i \in \mathbb{R}$ e a capacidade máxima de atendimento $s_i \in \mathbb{Z}$ para cada facilidade $i \in I$. 
+	Então, para cada par de facilidade e cliente $\langle i, j \rangle \in I \times J$, há a demanda $p_{ij} \in \mathbb{Z}$ (quantas unidades do produto $i$ deveria fornecer a $j$ caso o atenda) e o custo $g_{ij} \in \mathbb{R}$ de atendimento de toda essa demanda.  	 		
+	A possibilidade de a demanda ser diferente se for atendida por facilidades diferentes é uma generalização razoável permitida pela restrição maior das fontes de atendimento.
+	
+	\begin{equation}
+		\label{cflp:ss:obj}		
+		\min \sum_{i \in I} 
+		(
+		f_i y_i + \sum_{j \in J} g_{ij} x_{ij}
+		)
+	\end{equation}
+	
+	sujeito a 				
+	
+	\begin{equation}
+		\label{cflp:ss:const:demand}		
+		\sum_{i \in I} x_{ij} = 1 
+		\quad
+		\forall j \in J
+	\end{equation}
+	
+	\begin{equation}
+		\label{cflp:ss:const:capacity}		
+		\sum_{j \in J} p_{ij} x_{ij} \le y_i s_i 
+		\quad
+		\forall i \in I
+	\end{equation}
+	
+	\begin{equation}
+		\label{cflp:ss:dom:var}		
+		y_i \in \{0, 1\}, 
+		\ x_{ij} \in \{0, 1\}, 
+		\quad
+		\forall i \in I, \ j \in J
+	\end{equation}
+	
+	Dessa vez, $x_{ij}$ é definida como variável binária, representando se a facilidade $i$ atende o cliente $j$. 
+	A restrição \ref{cflp:ss:const:demand} garante que exatamente uma facilidade atenda cada cliente.
+	Os custos de atendimento são somados na função objetivo (\ref{cflp:ss:obj}) de acordo com o custo total $g_{ij}$. 		
+	
+	Novamente, $y_i$ é a variável binária que representa se a facilidade $i \in I$ está aberta.
+	A restrição \ref{cflp:ss:const:capacity} exige que, se a soma dos atendimentos prestados por $i$ para todos os seus clientes for positiva, a facilidade deva ser instalada ($y_i = 1$). 
+	Essa restrição também limita a soma dos atendimentos (considerando a quantidade de produtos $p_{ij}$ de cada um deles) à capacidade $s_i$ da facilidade.
+	Serão somados na função objetivo (\ref{cflp:ss:obj}) os custos de instalação $f_i$ das facilidades abertas ($y_i = 1$).
+	
+	\begin{observation} \label{cflp:ss:obs:int}
+		Assim como o modelo MS-CFLP [\ref{defmodel:cflp:ms}], esse modelo considera indivisibilidade de unidades do produto nas capacidades $s_i$ e demandas $p_{ij}$ inteiras. 
+		Mas se elas fossem reais não haveria nenhuma alteração de funcionamento, dispensando alteração de domínio das variáveis.
+	\end{observation}
+	
+	\begin{observation} \label{cflp:ss:obs:gc} 
+		Embora tenha mudado a representação, não houve alteração nos dados de custo de atendimento. 
+		Pode-se substituir, neste modelo, $g_{ij} = c_{ij} p_{ij}$ e, no MS-CFLP [\ref{defmodel:cflp:ms}], $g_{ij} = c_{ij} d_j$.
+	\end{observation}
+	
+	\begin{observation} \label{cflp:ss:obs:ms}
+		A relaxação linear das variáveis $x_{ij} \in \mathbb{R}$ permitiria a representação de um modelo MS-CFLP [\ref{defmodel:cflp:ms}] com unidades divisíveis.  
+		Contudo, devido à variação da demanda de um mesmo cliente para cada facilidade que o possa atender, esse relaxação modelaria uma situação incomum e estranha. Dessa forma, não utilizaremos instâncias desse formato como se não tivessem a restrição de fonte única.
+	\end{observation}	
+	
+	\subsubsection{De MS-CFLP para SS-CFLP} \label{defmodel:cflp:ms:ss}
+	Para utilizar dados de uma instância do MS-CFLP [\ref{defmodel:cflp:ms}] e utilizá-la SS-CFLP, basta que, para todo $i \in I$ e $j \in J$, $p_{ij} = d_j$ e $g_{ij} = c_{ij} p_{ij} = c_{ij} d_j$ (conforme a observação \ref{cflp:ss:obs:gc}).
+	
+	Os demais dados são os mesmos para ambos. 
+	
+	
+	
+	\subsection{MS-CFLP-CI: problema de localização de facilidades com capacidade limitada e incompatibilidade de clientes} \label{defmodel:cflp:ci}	
+	
+	Algumas instâncias que foram utilizadas apresentavam uma restrição a mais.
+	Além da função objetivo (\ref{cflp:ms:obj}), da restrição de atendimento de demanda \ref{cflp:ms:const:demand}, de limitação de capacidade \ref{cflp:ms:const:capacity} e das variáveis definidas na restrição \ref{cflp:ms:dom:var}, é adicionado um conjunto de pares de clientes incompatíveis $\Gamma \subset J^2$. 
+	Os clientes desses pares não podem ser atendidos pela mesma facilidade.
+	
+	\begin{equation}
+		\label{cflp:ms:ci:const:incomp}		
+		x_{ij_1} \le \lambda_{ij_1j_2} s_i, 
+		\ x_{ij_2} \le (1 - \lambda_{ij_1j_2}) s_i 
+		\quad
+		\forall i \in I, \langle j_1, j_2 \rangle \in \Gamma  				
+	\end{equation} 
+	
+	Para isso, são definidas as variáveis de disjunção $\lambda_{ij_1j_2}$
+	
+	\begin{equation}
+		\label{cflp:ms:ci:dom:var}		
+		\lambda_{ij_1j_2} \in \{ 0, 1 \}	
+		\quad
+		\forall i \in I, \langle j_1, j_2 \rangle \in \Gamma	
+	\end{equation}
+	
+	
+	
+	
+	
+	
+	\section{Experimentos computacionais}
+	Foram escolhidos os resolvedores \solver{Cbc}, \solver{CPLEX} e \solver{Gurobi} para comparação de otimalidade, tempo e nós visitados. 
+	Os dados para comparação são extraídos dos arquivos de \textit{log} com a biblioteca \python{Orloge}. 
+	Como ela não oferece suporte para leitura de \textit{log} do \solver{SCIP}, esse resolvedor não foi incluído no estudo.
+	
+	Foram utilizadas instâncias do CFLP de quatro diferentes conjuntos:
+	\begin{enumerate}
+		\item \instance{sobolev} \cite{sobolev}: 	
+		esse conjunto de 100 instâncias do modelo SS-CFLP [\ref{defmodel:cflp:ss}] possui, para cada facilidade e cliente, diferentes demandas. 
+		\ifartigo
+		Foi utilizado somente com fonte única, apresentado na tabela \ref{cflp:tab:1} como \instance{sobolev	.ss}.
+		\fi	
+		Esse conjunto possui a peculiaridade de alguns pares de facilidade e cliente não terem demanda especificada, indicando que aquela facilidade não pode atender a esse cliente.
+		Ele é organizado em 5 grupos de 20 instâncias, tendo em cada um desses a mesma capacidade para todas as facilidades: 10, 20, 30, 40 e 50.
+		
+		\item \instance{beasley} \cite{beasley}:
+		há 36 instâncias do modelo MS-CFLP [\ref{defmodel:cflp:ms}], sendo as primeiras 24 muito pequenas e as 12 últimas, grandes.
+		Foi utilizado na forma MS-CFLP original e também com as restrições adicionais de SS-CFLP [\ref{defmodel:cflp:ms:ss}].
+		\ifartigo
+		Nas tabelas \ref{cflp:tab:1}, \ref{cflp:tab:4} e \ref{cflp:tab:6} é apresentado esse conjunto em partes: 
+		\instance{beasley.small.ms} e \instance{beasley.small.ss} referem-se às 24 instâncias menores, com múltiplas fontes (MS) e fonte única (SS);  
+		\instance{beasley.large.ms} e \instance{beasley.large.ss} são as 12 grandes, MS e SS.
+		\fi	
+		
+		\item \instance{holmberg} \cite{holmberg}:				
+		as 71 instâncias pequenas desse conjunto utilizam o mesmo formato do conjunto \instance{beasley}, também utilizado na forma original MS-CFLP [\ref{defmodel:cflp:ms}] e na adaptada para SS-CFLP [\ref{defmodel:cflp:ms:ss}].
+		\ifartigo
+		Estão apresentadas nas tabelas \ref{cflp:tab:1} e \ref{cflp:tab:6} como \instance{holmberg.ms} e \instance{holmberg.ss} para as soluções MS e SS.
+		\fi	
+		
+		\item \instance{mess} \cite{mess}:	
+		conjunto de 20 instâncias muito grandes no modelo MS-CFLP-CI [\ref{defmodel:cflp:ci}], utilizados como MS-CFLP [\ref{defmodel:cflp:ms}] e SS-CFLP [\ref{defmodel:cflp:ms:ss}].
+		\ifartigo
+		Chamado de \instance{mess.ms} e \instance{mess.ss} nas tabelas \ref{cflp:tab:5} e \ref{cflp:tab:0}
+		\fi	
+	\end{enumerate} 
+	
+	As instâncias são lidas por um \textit{script} \python{Python} que constrói o modelo de otimização mista da biblioteca \python{PuLP} e executa os resolvedores pela interface de linha de comando.   
+	
+	Cada instância de \instance{sobolev	}, \instance{beasley} e \instance{holmberg} foi resolvida três vezes, com os limites de tempo de 2, 5 e 10 minutos.
+	As instâncias de \texttt{mess} tiveram limitação maior, de 10, 30 e 60 minutos.
+	
+	Os testes foram conduzidos em um computador \textit{desktop} Dell XPS 8930 com sistema operacional Ubuntu 22.04.1 LTS 64-bit, processador Intel{\textregistered} Core{\texttrademark} i7-8700 CPU @ 3.20GHz $\times$ 12 e 16 GB de memória RAM.    		
+	\ifartigo
+	Os resultados estão nas tabelas \ref{cflp:tab:1}, \ref{cflp:tab:4}, \ref{cflp:tab:5}, \ref{cflp:tab:6} e \ref{cflp:tab:0}.
+	\fi	
+	
+	\begin{sidewaystable}[]
+		\input{1.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
+	\end{sidewaystable}	
+	
+	\begin{sidewaystable}[]
+		\input{4.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
+		\input{5.CBC-CPLEX-GUROBI.600_1800_3600.cflp.table}
+		\input{9.CBC-CPLEX-GUROBI.600_1800_3600.cflp.table}
+	\end{sidewaystable}	
+	
+	\begin{sidewaystable}[]	
+		\input{6.CBC-CPLEX-GUROBI.120_300_600.cflp.table}
+	\end{sidewaystable}
+	
+	%E um \textit{laptop} Acer Aspire E5-574G com sistema operacional Windows 10 22H2 64-bit, processador Intel{\textregistered} Core{\texttrademark} i7-6500U CPU @ 2.50GHz 2.60GHz e 16 GB de memória RAM. 
+	
+	\section{Considerações finais}
+	
+	
+	~\\
+	\bibliographystyle{sbpo}
+	\bibliography{bibliografia} 
+	
+	
+\end{document}
+
