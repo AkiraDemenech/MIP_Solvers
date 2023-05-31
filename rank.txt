@@ -1,18 +1,1089 @@
 
  mess.ss
 
+  gap
+
+  	 600
+  		 GUROBI 	 2.3028785714285718
+  		 CPLEX 	 2.6041666666666665
+  		 CBC 	 24.57421395440445
+
+  	 1800
+  		 CPLEX 	 1.452
+  		 GUROBI 	 1.5629230769230769
+  		 CBC 	 22.36962742777414
+
+  	 3600
+  		 CPLEX 	 1.0166666666666666
+  		 GUROBI 	 1.1145454545454547
+  		 CBC 	 20.16557775053783
+
+  time
+
+  	 600
+  		 CPLEX 	 522.1458333333334
+  		 GUROBI 	 537.6700000000001
+  		 CBC 	 557.4415384615385
+
+  	 1800
+  		 CPLEX 	 1466.693
+  		 GUROBI 	 1548.8038461538458
+  		 CBC 	 1654.719230769231
+
+  	 3600
+  		 CPLEX 	 2837.3511111111115
+  		 GUROBI 	 2985.014545454546
+  		 CBC 	 3291.498461538462
+
+  nodes
+
+  	 600
+  		 CBC 	 4341.0
+  		 GUROBI 	 27669.285714285714
+  		 CPLEX 	 33706.75
+
+  	 1800
+  		 CBC 	 22587.615384615383
+  		 GUROBI 	 67568.38461538461
+  		 CPLEX 	 83416.2
+
+  	 3600
+  		 CBC 	 60128.230769230766
+  		 GUROBI 	 140783.72727272726
+  		 CPLEX 	 171594.66666666666
+
+  #Opt
+
+  	 600
+  		 CBC 	 1
+  		 CPLEX 	 2
+  		 GUROBI 	 2
+
+  	 1800
+  		 CBC 	 1
+  		 CPLEX 	 2
+  		 GUROBI 	 2
+
+  	 3600
+  		 CBC 	 1
+  		 CPLEX 	 2
+  		 GUROBI 	 2
+
+  #Fact
+
+  	 600
+  		 CBC 	 7
+  		 CPLEX 	 12
+  		 GUROBI 	 14
+
+  	 1800
+  		 CBC 	 7
+  		 CPLEX 	 10
+  		 GUROBI 	 13
+
+  	 3600
+  		 CBC 	 7
+  		 CPLEX 	 9
+  		 GUROBI 	 11
+
+  #TL
+
+  	 600
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+  		 CBC 	 6
+
+  	 1800
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+  		 CBC 	 6
+
+  	 3600
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+  		 CBC 	 6
+
+  #OfM
+
+  	 600
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+  		 CBC 	 1
+
+  	 1800
+  		 CBC 	 0
+  		 GUROBI 	 1
+  		 CPLEX 	 2
+
+  	 3600
+  		 CBC 	 0
+  		 CPLEX 	 3
+  		 GUROBI 	 3
+
  sobolev.ss
+
+  gap
+
+  	 120
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.005777
+  		 CBC 	 4.679060738592959
+
+  	 300
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+  		 CBC 	 2.11706612269357
+
+  	 600
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+  		 CBC 	 0.11765857785122805
+
+  time
+
+  	 120
+  		 CPLEX 	 17.755500000000005
+  		 GUROBI 	 28.701500000000006
+  		 CBC 	 114.47750000000005
+
+  	 300
+  		 CPLEX 	 17.771799999999995
+  		 GUROBI 	 28.868300000000005
+  		 CBC 	 231.06829999999988
+
+  	 600
+  		 CPLEX 	 17.6992
+  		 GUROBI 	 28.7627
+  		 CBC 	 310.79960000000005
+
+  nodes
+
+  	 120
+  		 CBC 	 4383.73
+  		 CPLEX 	 12440.43
+  		 GUROBI 	 20989.02
+
+  	 300
+  		 CBC 	 8574.17
+  		 CPLEX 	 12440.43
+  		 GUROBI 	 21176.65
+
+  	 600
+  		 CBC 	 10707.35
+  		 CPLEX 	 12440.43
+  		 GUROBI 	 21176.65
+
+  #Opt
+
+  	 120
+  		 CBC 	 16
+  		 GUROBI 	 99
+  		 CPLEX 	 100
+
+  	 300
+  		 CBC 	 57
+  		 CPLEX 	 100
+  		 GUROBI 	 100
+
+  	 600
+  		 CBC 	 86
+  		 CPLEX 	 100
+  		 GUROBI 	 100
+
+  #Fact
+
+  	 120
+  		 CBC 	 100
+  		 CPLEX 	 100
+  		 GUROBI 	 100
+
+  	 300
+  		 CBC 	 100
+  		 CPLEX 	 100
+  		 GUROBI 	 100
+
+  	 600
+  		 CBC 	 100
+  		 CPLEX 	 100
+  		 GUROBI 	 100
+
+  #TL
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  #OfM
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
 
  holmberg.ss
 
+  gap
+
+  	 120
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+  		 CBC 	 0.03382184526733819
+
+  	 300
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+  		 CBC 	 0.02826828745739694
+
+  	 600
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+  		 CBC 	 0.023841323016321123
+
+  time
+
+  	 120
+  		 CPLEX 	 0.5677464788732395
+  		 GUROBI 	 0.594225352112676
+  		 CBC 	 7.719859154929578
+
+  	 300
+  		 CPLEX 	 0.5667605633802817
+  		 GUROBI 	 0.5971830985915493
+  		 CBC 	 12.786901408450705
+
+  	 600
+  		 CPLEX 	 0.565492957746479
+  		 GUROBI 	 0.594225352112676
+  		 CBC 	 19.47830985915493
+
+  nodes
+
+  	 120
+  		 CPLEX 	 718.4647887323944
+  		 GUROBI 	 747.5774647887324
+  		 CBC 	 2103.0281690140846
+
+  	 300
+  		 CPLEX 	 718.4647887323944
+  		 GUROBI 	 747.5774647887324
+  		 CBC 	 3901.0845070422533
+
+  	 600
+  		 CPLEX 	 718.4647887323944
+  		 GUROBI 	 747.5774647887324
+  		 CBC 	 5994.704225352113
+
+  #Opt
+
+  	 120
+  		 CBC 	 69
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  	 300
+  		 CBC 	 69
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  	 600
+  		 CBC 	 70
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  #Fact
+
+  	 120
+  		 CBC 	 71
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  	 300
+  		 CBC 	 71
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  	 600
+  		 CBC 	 71
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  #TL
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  #OfM
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
  beasley.small.ss
+
+  gap
+
+  	 120
+  		 CBC 	 0.0
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+
+  	 300
+  		 CBC 	 0.0
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+
+  	 600
+  		 CBC 	 0.0
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+
+  time
+
+  	 120
+  		 GUROBI 	 0.05583333333333334
+  		 CPLEX 	 0.07208333333333332
+  		 CBC 	 0.26458333333333334
+
+  	 300
+  		 GUROBI 	 0.05666666666666667
+  		 CPLEX 	 0.07083333333333332
+  		 CBC 	 0.26499999999999996
+
+  	 600
+  		 GUROBI 	 0.05625
+  		 CPLEX 	 0.07041666666666667
+  		 CBC 	 0.26333333333333336
+
+  nodes
+
+  	 120
+  		 GUROBI 	 0.0
+  		 CPLEX 	 0.625
+  		 CBC 	 5.833333333333333
+
+  	 300
+  		 GUROBI 	 0.0
+  		 CPLEX 	 0.625
+  		 CBC 	 5.833333333333333
+
+  	 600
+  		 GUROBI 	 0.0
+  		 CPLEX 	 0.625
+  		 CBC 	 5.833333333333333
+
+  #Opt
+
+  	 120
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  	 300
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  	 600
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  #Fact
+
+  	 120
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  	 300
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  	 600
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  #TL
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  #OfM
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
 
  beasley.large.ss
 
+  gap
+
+  	 120
+  		 CPLEX 	 4.239166666666667
+  		 GUROBI 	 5.364466666666668
+  		 CBC 	 80.43808168776859
+
+  	 300
+  		 CPLEX 	 1.0083333333333335
+  		 GUROBI 	 1.1269583333333333
+  		 CBC 	 80.04694143737491
+
+  	 600
+  		 GUROBI 	 0.531575
+  		 CPLEX 	 0.5775
+  		 CBC 	 55.23580005375155
+
+  time
+
+  	 120
+  		 CPLEX 	 120.04749999999997
+  		 GUROBI 	 120.11083333333333
+  		 CBC 	 129.86666666666667
+
+  	 300
+  		 CPLEX 	 241.5658333333333
+  		 GUROBI 	 292.33
+  		 CBC 	 313.04833333333335
+
+  	 600
+  		 CPLEX 	 322.6041666666667
+  		 GUROBI 	 446.46083333333337
+  		 CBC 	 609.3125
+
+  nodes
+
+  	 120
+  		 CBC 	 0.0
+  		 CPLEX 	 77.58333333333333
+  		 GUROBI 	 1279.75
+
+  	 300
+  		 CBC 	 1.5833333333333333
+  		 CPLEX 	 1376.3333333333333
+  		 GUROBI 	 1858.75
+
+  	 600
+  		 CBC 	 128.83333333333334
+  		 CPLEX 	 2211.25
+  		 GUROBI 	 3475.4166666666665
+
+  #Opt
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 GUROBI 	 3
+  		 CPLEX 	 7
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 9
+  		 GUROBI 	 9
+
+  #Fact
+
+  	 120
+  		 CBC 	 12
+  		 CPLEX 	 12
+  		 GUROBI 	 12
+
+  	 300
+  		 CBC 	 12
+  		 CPLEX 	 12
+  		 GUROBI 	 12
+
+  	 600
+  		 CBC 	 12
+  		 CPLEX 	 12
+  		 GUROBI 	 12
+
+  #TL
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  #OfM
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
  mess.ms
+
+  gap
+
+  	 600
+  		 GUROBI 	 0.11982999999999999
+  		 CPLEX 	 0.15
+  		 CBC 	 10.890132766969442
+
+  	 1800
+  		 GUROBI 	 0.04990000000000001
+  		 CPLEX 	 0.08285714285714287
+  		 CBC 	 9.15572897393363
+
+  	 3600
+  		 GUROBI 	 0.024842857142857142
+  		 CPLEX 	 0.03166666666666667
+  		 CBC 	 6.722749251295742
+
+  time
+
+  	 600
+  		 CPLEX 	 319.47285714285715
+  		 GUROBI 	 391.60499999999996
+  		 CBC 	 526.0214285714286
+
+  	 1800
+  		 CPLEX 	 836.3328571428572
+  		 GUROBI 	 982.1733333333335
+  		 CBC 	 1542.0849999999998
+
+  	 3600
+  		 CPLEX 	 1149.4266666666665
+  		 GUROBI 	 1262.472857142857
+  		 CBC 	 2863.9563636363637
+
+  nodes
+
+  	 600
+  		 CBC 	 4591.428571428572
+  		 GUROBI 	 8464.4
+  		 CPLEX 	 12246.714285714286
+
+  	 1800
+  		 CBC 	 11778.642857142857
+  		 GUROBI 	 23655.444444444445
+  		 CPLEX 	 29640.428571428572
+
+  	 3600
+  		 CBC 	 24014.81818181818
+  		 GUROBI 	 27462.285714285714
+  		 CPLEX 	 51592.666666666664
+
+  #Opt
+
+  	 600
+  		 CBC 	 2
+  		 CPLEX 	 4
+  		 GUROBI 	 4
+
+  	 1800
+  		 CBC 	 2
+  		 CPLEX 	 4
+  		 GUROBI 	 5
+
+  	 3600
+  		 CBC 	 3
+  		 CPLEX 	 5
+  		 GUROBI 	 5
+
+  #Fact
+
+  	 600
+  		 CPLEX 	 7
+  		 GUROBI 	 10
+  		 CBC 	 14
+
+  	 1800
+  		 CPLEX 	 7
+  		 GUROBI 	 9
+  		 CBC 	 14
+
+  	 3600
+  		 CPLEX 	 6
+  		 GUROBI 	 7
+  		 CBC 	 11
+
+  #TL
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 1800
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 3600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  #OfM
+
+  	 600
+  		 CPLEX 	 0
+  		 CBC 	 1
+  		 GUROBI 	 3
+
+  	 1800
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 3
+
+  	 3600
+  		 CPLEX 	 1
+  		 CBC 	 3
+  		 GUROBI 	 5
 
  holmberg.ms
 
+  gap
+
+  	 120
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+  		 CBC 	 0.028103982058739266
+
+  	 300
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+  		 CBC 	 0.007561047045612305
+
+  	 600
+  		 CBC 	 0.0
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+
+  time
+
+  	 120
+  		 GUROBI 	 0.1666197183098592
+  		 CPLEX 	 0.25126760563380285
+  		 CBC 	 3.690281690140845
+
+  	 300
+  		 GUROBI 	 0.1666197183098592
+  		 CPLEX 	 0.25549295774647895
+  		 CBC 	 6.188169014084507
+
+  	 600
+  		 GUROBI 	 0.16647887323943664
+  		 CPLEX 	 0.2538028169014085
+  		 CBC 	 8.485633802816901
+
+  nodes
+
+  	 120
+  		 GUROBI 	 10.76056338028169
+  		 CPLEX 	 72.4225352112676
+  		 CBC 	 188.49295774647888
+
+  	 300
+  		 GUROBI 	 10.76056338028169
+  		 CPLEX 	 72.4225352112676
+  		 CBC 	 354.61971830985914
+
+  	 600
+  		 GUROBI 	 10.76056338028169
+  		 CPLEX 	 72.4225352112676
+  		 CBC 	 583.1549295774648
+
+  #Opt
+
+  	 120
+  		 CBC 	 70
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  	 300
+  		 CBC 	 70
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  	 600
+  		 CBC 	 71
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  #Fact
+
+  	 120
+  		 CBC 	 71
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  	 300
+  		 CBC 	 71
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  	 600
+  		 CBC 	 71
+  		 CPLEX 	 71
+  		 GUROBI 	 71
+
+  #TL
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  #OfM
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
  beasley.small.ms
 
+  gap
+
+  	 120
+  		 CBC 	 0.0
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+
+  	 300
+  		 CBC 	 0.0
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+
+  	 600
+  		 CBC 	 0.0
+  		 CPLEX 	 0.0
+  		 GUROBI 	 0.0
+
+  time
+
+  	 120
+  		 GUROBI 	 0.06583333333333334
+  		 CPLEX 	 0.07958333333333333
+  		 CBC 	 0.38875
+
+  	 300
+  		 GUROBI 	 0.06541666666666666
+  		 CPLEX 	 0.07874999999999999
+  		 CBC 	 0.38666666666666666
+
+  	 600
+  		 GUROBI 	 0.06541666666666666
+  		 CPLEX 	 0.07958333333333333
+  		 CBC 	 0.38625
+
+  nodes
+
+  	 120
+  		 GUROBI 	 0.0
+  		 CPLEX 	 11.458333333333334
+  		 CBC 	 45.166666666666664
+
+  	 300
+  		 GUROBI 	 0.0
+  		 CPLEX 	 11.458333333333334
+  		 CBC 	 45.166666666666664
+
+  	 600
+  		 GUROBI 	 0.0
+  		 CPLEX 	 11.458333333333334
+  		 CBC 	 45.166666666666664
+
+  #Opt
+
+  	 120
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  	 300
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  	 600
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  #Fact
+
+  	 120
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  	 300
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  	 600
+  		 CBC 	 24
+  		 CPLEX 	 24
+  		 GUROBI 	 24
+
+  #TL
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  #OfM
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
  beasley.large.ms
+
+  gap
+
+  	 120
+  		 CPLEX 	 1.9183333333333332
+  		 GUROBI 	 5.3087
+  		 CBC 	 82.73851940919387
+
+  	 300
+  		 CPLEX 	 0.5883333333333333
+  		 GUROBI 	 1.7010666666666665
+  		 CBC 	 82.45026946671894
+
+  	 600
+  		 GUROBI 	 0.313475
+  		 CPLEX 	 0.42250000000000004
+  		 CBC 	 69.93888653832146
+
+  time
+
+  	 120
+  		 CPLEX 	 106.22833333333331
+  		 GUROBI 	 111.08499999999998
+  		 CBC 	 130.40833333333333
+
+  	 300
+  		 CPLEX 	 183.49166666666667
+  		 GUROBI 	 261.1116666666666
+  		 CBC 	 308.5566666666667
+
+  	 600
+  		 CPLEX 	 258.4825
+  		 GUROBI 	 392.5175000000001
+  		 CBC 	 607.5416666666666
+
+  nodes
+
+  	 120
+  		 CBC 	 0.0
+  		 CPLEX 	 580.8333333333334
+  		 GUROBI 	 1043.1666666666667
+
+  	 300
+  		 CBC 	 0.16666666666666666
+  		 GUROBI 	 1182.5
+  		 CPLEX 	 2314.75
+
+  	 600
+  		 CBC 	 22.333333333333332
+  		 GUROBI 	 1641.8333333333333
+  		 CPLEX 	 3291.5833333333335
+
+  #Opt
+
+  	 120
+  		 CBC 	 0
+  		 GUROBI 	 2
+  		 CPLEX 	 5
+
+  	 300
+  		 CBC 	 0
+  		 GUROBI 	 2
+  		 CPLEX 	 9
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 9
+  		 GUROBI 	 10
+
+  #Fact
+
+  	 120
+  		 CBC 	 12
+  		 CPLEX 	 12
+  		 GUROBI 	 12
+
+  	 300
+  		 CBC 	 12
+  		 CPLEX 	 12
+  		 GUROBI 	 12
+
+  	 600
+  		 CBC 	 12
+  		 CPLEX 	 12
+  		 GUROBI 	 12
+
+  #TL
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  #OfM
+
+  	 120
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 300
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0
+
+  	 600
+  		 CBC 	 0
+  		 CPLEX 	 0
+  		 GUROBI 	 0

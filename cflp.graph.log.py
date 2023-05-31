@@ -79,7 +79,7 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 	rank[instance_source_type_code] = r = {} 
 	print('\n',instance_source_type_code, file=ranking)
 
-	'''
+	#'''
 	stats = {s: 
 	  			{tl: 
        				{col: 
