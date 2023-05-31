@@ -14,6 +14,10 @@
 \usepackage{multirow}
 \usepackage{rotating}
 
+\usepackage{graphicx}
+% pasta das imagens
+\graphicspath{ {./img/} }
+
 \newtheorem{observation}{Observação}
 
 \newcommand{ \solver }[1]{\textit{#1}} 
@@ -306,7 +310,7 @@
 			\item \instance{mess} \cite{mess}:	
 				conjunto de 20 instâncias muito grandes no modelo MS-CFLP-CI [\ref{defmodel:cflp:ci}], utilizados como MS-CFLP [\ref{defmodel:cflp:ms}] e SS-CFLP [\ref{defmodel:cflp:ms:ss}].
 				\ifartigo
-					Chamado de \instance{mess.ms} e \instance{mess.ss} nas tabelas \ref{cflp:tab:5} e \ref{cflp:tab:0}
+					Chamado de \instance{mess.ms} e \instance{mess.ss} nas tabelas \ref{cflp:tab:5} e \ref{cflp:tab:9}
 				\fi	
 		\end{enumerate} 
 	
@@ -317,11 +321,12 @@
 		
 		Os testes foram conduzidos em um computador \textit{desktop} Dell XPS 8930 com sistema operacional Ubuntu 22.04.1 LTS 64-bit, processador Intel{\textregistered} Core{\texttrademark} i7-8700 CPU @ 3.20GHz $\times$ 12 e 16 GB de memória RAM.    		
 		\ifartigo
-			Os resultados estão nas tabelas \ref{cflp:tab:1}, \ref{cflp:tab:4}, \ref{cflp:tab:5}, \ref{cflp:tab:6} e \ref{cflp:tab:0}.
+			Os resultados estão nas tabelas \ref{cflp:tab:1}, \ref{cflp:tab:4}, \ref{cflp:tab:5}, \ref{cflp:tab:6} e \ref{cflp:tab:9}.
 		\fi	
 		
 		%E um \textit{laptop} Acer Aspire E5-574G com sistema operacional Windows 10 22H2 64-bit, processador Intel{\textregistered} Core{\texttrademark} i7-6500U CPU @ 2.50GHz 2.60GHz e 16 GB de memória RAM.
 		
+		\input{fig}
 
 	\vfill
 	\section{Referências}

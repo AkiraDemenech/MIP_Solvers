@@ -1,10 +1,30 @@
 from matplotlib import pyplot 
 import pandas
 
+def avg (data):
+	num = [d for d in data if d == d]
+	if not len(num):
+		return None		
+
+	j = len(num) >> 1
+	i = j - (not (len(num) & 1))	
+	num.sort()
+
+	return (sum(num) / len(num))#, ((num[i] + num[j]) / 2)
+
+
+
 csv = {}
 #cbc_gap = {}
 csv_file_list = []
 csv_file_dir = 'eduardo'
+
+latex_dir = 'doc'
+img_dir = 'img'
+latex = open(latex_dir + '/fig.tex', 'w')
+ranking = open('rank.txt', 'w')		
+rank = {}
+
 for source_type, source_type_label in [
 	('ss', 'single-source'),
 	('ms', 'multi-source')
@@ -13,283 +33,175 @@ for source_type, source_type_label in [
 		('mess', 'MESS'),
 		('sobolev', 'Sobolev'),
 		('holmberg', 'Holmberg et al.'),
-		('beasley', 'Beasley'),
+	#	('beasley', 'Beasley'),
 		('beasley.small', 'Beasley small'),
 		('beasley.large', 'Beasley large')
 	]:	
-		csv_file_list.append((f'{csv_file_dir}/{instance_type}.{source_type}.cflp.log.csv', f'{instance_type_label} {source_type_label}'))
+		csv_file_list.append((f'{csv_file_dir}/{instance_type}.{source_type}.cflp.log.csv', f'{instance_type_label} {source_type_label}', f'{instance_type}.{source_type}'))
 
-for csv_log, title in csv_file_list:
-	dados = pandas.read_csv(csv_log, sep=';', decimal=',')
+for csv_log, title, instance_source_type_code in csv_file_list:
 	print('\n', csv_log)
 
-	d = c = csv
-	for k in csv_log.split('/')[-1].strip().lower().split('.')[1:-2]:					
-		d = c
-		if not k in c:	
-			c[k] = {}
-		c = c[k]	
-		print(k)
-	res = {}
-	d[k] = dados, res, title		
-	#cbc_gap[k] = 
-	file_time_solver_gap = {}
+	try:
+		dados = pandas.read_csv(open(csv_log, 'r'), sep=';', decimal=',')
+	except:   	
+		print('not found!')
+		continue
+
+	solvers = list(set(dados['solver']))
+	solvers.sort()
+
+	time_limits = list(set(dados['time_limit']))
+	time_limits.sort()
+
+	print('Solvers:\t', solvers, '\nTime limits:\t', time_limits)
+
+	med = {col: {(s,t): [] for s in solvers for t in time_limits} for col in ('gap', 'time', 'nodes')}
+	#print(med) #:	print('\n',col.title(),'\n', [ln for ln in dados[col] if ln != ln])						
 	
-	instances = len(set(dados['instance_source_file_name']))
-	
-	
-	for row in range(len(dados)):
-		solver = dados['solver'][row]
+	for row in range(len(dados)): 
+
+		# nome do arquivo 
 		file_name = dados['instance_source_file_name'][row]
+		
+		# nome do solver
+		solver = dados['solver'][row]		
+
+		# limite de tempo 
 		time_limit = dados['time_limit'][row]
-		nodes = dados['nodes'][row] - (solver[0] == 'G') # gurobi conta a nó raiz
-		gap = dados['gap'][row]
+
+		# correção dos nós percorridos 		
+		dados['nodes'][row] -= (solver[0] == 'G') # gurobi conta a nó raiz
 		
-		if not file_name in file_time_solver_gap:
-			file_time_solver_gap[file_name] = {}
-		
-		if not time_limit in file_time_solver_gap[file_name]:
-			file_time_solver_gap[file_name][time_limit] = {}
-		 	
-		file_time_solver_gap[file_name][time_limit][solver] = dados['best_solution'][row]
+		for col in med:
+			med[col][solver, time_limit].append(dados[col][row]) 	
 
-		if not solver in res:
-			res[solver] = {}
-		if not time_limit in res[solver]:	
-			res[solver][time_limit] = []
+	rank[instance_source_type_code] = r = {} 
+	print('\n',instance_source_type_code, file=ranking)
 
-		res[solver][time_limit].append((gap, nodes, file_name))	
+	'''
+	stats = {s: 
+	  			{tl: 
+       				{col: 
+	    				avg(med[col][s, tl]) 
+					for col in med} 
+				for tl in time_limits} 
+			for s in solvers}
 
-	#cbc_gap = [None] * len(dados)
-	solver_time_file_gap = {}
-	for file_name in file_time_solver_gap:
-		for time_limit in file_time_solver_gap[file_name]:
-			if not 'CBC' in file_time_solver_gap[file_name][time_limit]:
-				print('CBC solver gap failed in', file_name, time_limit)
-				continue 
+	dados = {}	
 
-			cbc_best = file_time_solver_gap[file_name][time_limit].pop('CBC')
-			for solver in file_time_solver_gap[file_name][time_limit]:
-				best = file_time_solver_gap[file_name][time_limit][solver]
-				cbc_gap = file_time_solver_gap[file_name][time_limit][solver] = 100 * (cbc_best - best) / best
+	for s in stats:
+		for tl in stats[s]:
 
-				if not solver in solver_time_file_gap:
-					solver_time_file_gap[solver] = {}
-				if not time_limit in solver_time_file_gap[solver]:
-					solver_time_file_gap[solver][time_limit] = []	
-				solver_time_file_gap[solver][time_limit].append((cbc_gap, file_name))	
+			print(s,'\t',tl)
 
-	for solver in solver_time_file_gap:
-		for time_limit in solver_time_file_gap[solver]:
-			solver_time_file_gap[solver][time_limit].sort()
-
-		times = list(solver_time_file_gap[solver])
-		times.sort()
-		minutes = [t/60 for t in times]
-
-		cbc_gap_values = [[cbc_g for cbc_g, fn in solver_time_file_gap[solver][t] if len(fn) > 5 and cbc_g == cbc_g] for t in times]
-
-		avg_cbc_gap = [sum(v) / len(v) for v in cbc_gap_values]
-
-		print(solver, minutes, avg_cbc_gap, cbc_gap_values)
-		pyplot.plot(minutes, avg_cbc_gap, label=solver, marker='.')
-	pyplot.title(title + ' (average Cbc gap)')	
-	pyplot.xlabel('Time limit (minutes)')
-	pyplot.ylabel('Average percentage gap')
-	pyplot.grid(True)
-	pyplot.legend()
-	pyplot.show()	
-
-	avg_gap = {}
-	for solver in res:
-		for time_limit in res[solver]:
-			res[solver][time_limit].sort()
-		
-		times = list(res[solver])	
-		times.sort()
-		minutes = [t/60 for t in times]
-
-		optimal = [len({f for g,n,f in res[solver][t] if not g}) * 100 / instances for t in times]
+			for c in stats[s][tl]:
+			#	print('\t',c.title(),'\t',stats[s][tl][c])
+				if not c in dados:
+					dados[c] = {}
+				dados[c][s,tl] = stats[s][tl][c]	
+			for d in ('#Opt', '#Fact', '#TL', '#OfM'):  		
+				if not d in dados:
+					dados[d] = {}
 	
-		print('\n', solver)
-		print(times)
-		print(minutes)
-		print(optimal)
-
-	#	''' Average gap 
-		avg_gap[solver] = [sum({(g if g == g else 100) for g,n,f in res[solver][t]}) / len(res[solver][t]) for t in times]	
-		print(avg_gap[solver])
-	#	print(avg_gap[solver][0] == avg_gap[solver][0])
-	#	'''
-		
-	#	''' Optimal x Time 
-		pyplot.plot(minutes, optimal, label=solver, marker='.')
-	pyplot.title(title + ' (gap = 0)')	
-	pyplot.xlabel('Time limit (minutes)')
-	pyplot.ylabel('Percentage of optimal-solved instances')
-	pyplot.grid(True)
-	pyplot.legend()
-	pyplot.show()
-	#	'''
-
-	''' Gap x Time (estranho)
-	for solver in avg_gap:
-		pyplot.plot(minutes, avg_gap[solver], label=solver, marker='.')
-	pyplot.title(title + ' (average gap)')	
-	pyplot.xlabel('Time limit (minutes)')
-	pyplot.ylabel('Average percentage gap')
-	pyplot.grid(True)
-	pyplot.legend()
-	pyplot.show()
-#	'''
-
-
-beasley_csv = csv['beasley']
-print('Beasley CSV data')
-
-for sources in beasley_csv:
-
-	print(sources)
-	dados, res, title = beasley_csv[sources]
-
-	max_nodes = 0
-	instances = set()
-	cumulativos = {}
-	for solver in res:
-		for time_limit in res[solver]:
-			if not time_limit in cumulativos:
-				cumulativos[time_limit] = {}
-			cumulativos[time_limit][solver] = {}	
-			for gap, nodes, file_name in res[solver][time_limit]:	
-				if not file_name[3].isalpha(): # somente considerar capa, capb e capc
-					continue 
-				instances.add(file_name)	
-				if not nodes in cumulativos[time_limit][solver]:
-					cumulativos[time_limit][solver][nodes] = []
-				max_nodes = max(max_nodes, nodes)
-			#	print(file_name, solver, '\t', nodes, gap)	
-				cumulativos[time_limit][solver][nodes].append((gap, file_name))	
-
-	instances = len(instances)
-	avg_gap = {}
-	for time_limit in cumulativos:		
-		avg_gap[time_limit] = {}
-		for solver in cumulativos[time_limit]:			
-			nodes = list(cumulativos[time_limit][solver])
-			nodes.sort()
-			if not max_nodes in nodes:	
-				nodes.append(max_nodes)									
-			 
-			optimal = []
-			values = []
-			avg_gap[time_limit][solver] = list(nodes), values
-			if not 0 in nodes:
-				nodes.insert(0,0)
-			s = l = ag = 0
+			dados['#Opt'][s, tl] = opt = sum((gap == 0) for gap in med['gap'][s, tl])
+			dados['#Fact'][s, tl] = fact = sum((gap == gap) for gap in med['gap'][s, tl])
+			dados['#OfM'][s, tl] = sol = sum((t != t) for t in med['time'][s, tl])
+			dados['#TL'][s, tl] = tl = len(med['time'][s, tl]) - sol - fact
 			
-			for n in nodes:
-				if n in cumulativos[time_limit][solver]:
-					ag += sum(g for g, f in cumulativos[time_limit][solver][n])	
-					l += len(cumulativos[time_limit][solver][n])
-					s += len({f for g, f in cumulativos[time_limit][solver][n] if not g}) 
-				if l:	
-					values.append(ag / l)								
-				optimal.append(s * 100 / instances)
-			''' Optimal x Nodes		
-			pyplot.plot(nodes, optimal, label=solver, marker='.') 
-		pyplot.title(f'{title} (gap = 0, time limit = {time_limit / 60} minutes)')	
-		pyplot.xlabel('Maximum enumerated nodes')
-		pyplot.ylabel('Percentage of optimal-solved instances')
-		pyplot.grid(True)
-		pyplot.legend()
-		pyplot.show()
-		#	'''
 
-#	''' Gap x Nodes	
-	for time_limit in avg_gap:
-		for solver in avg_gap[time_limit]:
-			nodes, values = avg_gap[time_limit][solver]
-			pyplot.plot(nodes, values, label=solver, marker='.')
-		pyplot.title(f'{title} (average gap, time limit = {time_limit / 60} minutes)')	
-		pyplot.xlabel('Maximum enumerated nodes')
-		pyplot.ylabel('Average percentage gap')
-		pyplot.grid(True)
-		pyplot.legend()
-		pyplot.show()	
-#	'''		
-	
-	avg_gap = {}
-	for time_limit in cumulativos:
-		for solver in cumulativos[time_limit]:
-			if not solver in avg_gap:
-				avg_gap[solver] = {}
-			avg_gap[solver][time_limit] = [g for n in cumulativos[time_limit][solver] for g, f in cumulativos[time_limit][solver][n]] 	
-	
-	
-	
-	for solver in avg_gap:
+		#	print('\t#Opt\t', opt) # otimalidade
+		#	print('\t#Fact\t', fact) # não são NaN (existe gap, existe solução)
+		#	print('\t#TL\t', tl)
+		#	print('\t#OfM\t', sol) # travou nesses	
 
-		times = list(avg_gap[solver])	
-		times.sort()
-		minutes = [t/60 for t in times]
-
-		gap = [sum(avg_gap[solver][time_limit]) / len(avg_gap[solver][time_limit]) for time_limit in avg_gap[solver]]
+	graph = {}
+	for col in dados:
+		graph[col] = g = {}	
+		minutos = set()
 		
-	#	''' Gap x Time		
-		print('Gap x Time\t', solver)
-		print(minutes)
-		print(gap)
-		pyplot.plot(minutes, gap, label=solver, marker='.') 
-	pyplot.title(f'{title} (average gap)')	
-	pyplot.xlabel('Time limit (minutes)')
-	pyplot.ylabel('Average percentage gap')
-	pyplot.grid(True)
-	pyplot.legend()
-	pyplot.show()
-	#	'''		 
+		for s, tl in dados[col]:
+			if not s in g:
+				g[s] = {}				
+			d = dados[col][s,tl]
+			if d != None:
+				m = tl		
+				minutos.add(m)
+				g[s][m] = d
 
+		minutos = list(minutos)		
+		minutos.sort()
 
-dados, res, title = csv['sobolev']
-print('Sobolev CSV data')
-max_nodes = 0
-instances = set()
-cumulativos = {}
-for solver in res:
-	for time_limit in res[solver]:
-		if not time_limit in cumulativos:
-			cumulativos[time_limit] = {}
-		cumulativos[time_limit][solver] = {}	
-		for gap, nodes, file_name in res[solver][time_limit]:	
-			instances.add(file_name)	
-			if not nodes in cumulativos[time_limit][solver]:
-				cumulativos[time_limit][solver][nodes] = []
-			max_nodes = max(max_nodes, nodes)
-		#	print(file_name, solver, '\t', nodes, gap)	
-			cumulativos[time_limit][solver][nodes].append((gap, file_name))	
+		solvers = list(g)
+		solvers.sort()
 
-instances = len(instances)
-for time_limit in cumulativos:		
-	for solver in cumulativos[time_limit]:			
-		nodes = list(cumulativos[time_limit][solver])
-		nodes.sort()
-		if not max_nodes in nodes:	
-			nodes.append(max_nodes)
-		if not 0 in nodes:
-			nodes.insert(0,0)
+		cores = ['C2', 'C0', 'C1'] + [f'C{n}' for n in range(3,10)]
+
+		phi = (1 + (5**.5)) / 2
+		separa = 1.1
+
+		largura = 0.2
+		fig_l = 11
+		fig_h = fig_l / phi#(2**.5)
 		
-		optimal = []
-		s = 0
-			
-		for n in nodes:
-			if n in cumulativos[time_limit][solver]:
-				s += len({f for g, f in cumulativos[time_limit][solver][n] if not g}) 
-			optimal.append(s * 100 / instances)
-		#	''' Optimal x Nodes		
-		pyplot.plot(nodes, optimal, label=solver, marker='.') 
-	pyplot.title(f'{title} (gap = 0, time limit = {time_limit / 60} minutes)')	
-	pyplot.xlabel('Maximum enumerated nodes')
-	pyplot.ylabel('Percentage of optimal-solved instances')
-	pyplot.grid(True)
-	pyplot.legend()
-	pyplot.show()
-	#	''' 
+		pyplot.figure(figsize=(fig_l,fig_h))
+		for c in range(len(solvers)):	
+			s = solvers[c]
+			x = []
+			y = []
+			deslocamento = c * largura * separa
+			for i in range(len(minutos)):
+				m = minutos[i]
+				x.append(i + deslocamento)
+				y.append(g[s][m])				
+			pyplot.bar_label(pyplot.bar(x, y, largura, label=s, color=cores[c]))	
+		pyplot.title(f'{instance_source_type_code}: {col} x time limit (seconds)')	
+		pyplot.ylabel(col)
+		#pyplot.xlabel('Time limit (minutes)')
+		pyplot.xticks([(j + (largura * separa)) for j in range(len(minutos))], minutos)
+		#pyplot.grid(True)	
+		pyplot.legend()
+		#pyplot.show()	
+
+		fig = f'res/{instance_source_type_code} - {col} x time.PDF'
+		pyplot.savefig(latex_dir + '/' + img_dir + '/' + fig, bbox_inches='tight')
+		pyplot.clf()
+
+		print('\t\includegraphics[width=\\textwidth]{'+fig+'} ', file=latex)
+	'''
+		
+	
+
+	for col in med:
+		r[col] = {}	
+
+		for sol, tl in med[col]:			
+			c = 0	
+			for v in med[col][sol,tl]:				
+				c += 1
+				if v == v:
+					if not (tl, c) in r[col]:
+						r[col][tl,c] = []
+					r[col][tl,c].append((v, sol))	
+
+	
+	'''
+	for col in graph:
+		r[col] = {}	
+
+		for sol in graph[col]:
+			for tl in graph[col][sol]:	
+				if not tl in r[col]:
+					r[col][tl] = []
+				r[col][tl].append((graph[col][sol][tl], sol))	
+
+		print('\n ',col,file=ranking)		
+		for tl in r[col]:		
+			r[col][tl].sort()
+			print('\n ','\t',tl,file=ranking)
+			for d, s in r[col][tl]:
+				print(' ','\t\t',s,'\t',d, file=ranking)
+	#	'''		
+
+
+print('rank=', rank, file=open('rank.py', 'w'))					

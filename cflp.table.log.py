@@ -2,7 +2,7 @@ from matplotlib import pyplot
 import pandas
 import sys 
 
-tab_id = 0
+
 
 comma = lambda x: int(x) if type(x) == int or x.is_integer() else ('%.02f' %x).replace('.',',')
 
@@ -17,11 +17,10 @@ def avg (data):
 
 	return {'Média':(sum(num) / len(num)), 'Mediana':((num[i] + num[j]) / 2)}
 
-def open_table (f, sol, tlim, caption=''):	
+def open_table (f, sol, tlim, tab_id = 0, caption=''):	
 	if type(f) == str:
 		f = open(f, 'w', encoding='UTF-8')
-	global tab_id	
-	tab_id += 1
+	
 
 	tabular = len(sol) * ('|' + (len(tlim) * 'l')) 
 
@@ -134,7 +133,7 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 		close_table(table)
 		table_inst += tn
 		tn = 0
-		table = open_table('doc/' + str(table_inst) + '.' + ('-'.join(str(s) for s in solvers)) + '.' + ('_'.join(str(tl) for tl in time_limits)) + '.cflp.table.tex', solvers, time_limits)
+		table = open_table('doc/' + str(table_inst) + '.' + ('-'.join(str(s) for s in solvers)) + '.' + ('_'.join(str(tl) for tl in time_limits)) + '.cflp.table.tex', solvers, time_limits, table_inst)
 		
 	
 
@@ -183,7 +182,7 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 					if not m in dados[c]:	
 						dados[c][m] = {}
 					dados[c][m][s,tl] = stats[s][tl][c][m]	
-			for d in ('\\#Opt', '\\#Fact', '\\#OfM', '\\#TL'):  		
+			for d in ('\\#Opt', '\\#Fact', '\\#TL', '\\#OfM'):  		
 				if not d in dados:
 					dados[d] = {}
 	
@@ -195,8 +194,9 @@ for csv_log, title, instance_source_type_code in csv_file_list:
 
 			print('\t#Opt\t', opt) # otimalidade
 			print('\t#Fact\t', fact) # não são NaN (existe gap, existe solução)
-			print('\t#OfM\t', sol) # travou nesses 
 			print('\t#TL\t', tl)
+			print('\t#OfM\t', sol) # travou nesses 
+			
 	#if len({dados['\\#Total'][st] for st in dados['\\#Total']}) <= 1:
 	#	dados.pop('\\#Total') # excluir a linha de total se forem todos iguais 				
 	#print(dados)
