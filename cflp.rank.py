@@ -74,10 +74,13 @@ for sol in score:
 			categorias = {}
 			print(*col,'\t',len(score[sol][i][col]))
 			for k in score[sol][i][col]:
-				for c in range(1, len(k)):
-					if not (c, k[c]) in categorias:
-						categorias[c, k[c]] = 0
-					categorias[c, k[c]] += 1
+				for c in range(len(k)):
+					t = k[c]
+					while type(t) == tuple and len(t) > 0:
+						t = t[0]	
+					if not (c, t) in categorias:
+						categorias[c, t] = 0
+					categorias[c, t] += 1
 			cat = list(categorias)		
 			cat.sort()
 			for c, k in cat:			
