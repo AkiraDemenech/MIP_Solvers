@@ -90,7 +90,8 @@ csv_file_list = []
 csv_file_dir = 'eduardo'
 for source_type, source_type_label in [
 	('ss', 'single-source'),
-	('ms', 'multi-source')
+	('ms', 'multi-source'),
+	('msi', 'multi-source with customer incompatibilities')
 ]:
 	for instance_type, instance_type_label in [
 		('sobolev', 'Sobolev'),

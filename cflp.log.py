@@ -68,8 +68,8 @@ int_end = lambda string, end: int_end(string, end + 1) if end < len(string) and 
 int_start = lambda string, start=0: int_start(string, start + 1) if start < len(string) and not string[start].isdigit() else start 
 to_int = lambda string: int(string) if len(string) > 0 else 0
 
-for sources in ('single source', 'multi source'):
-	for folder in ('MESS', 'Beasley', 'Holmberg', 'Sobolev'):#('small', 'large'):#
+for sources in ('single source', 'multi source', 'multi source/customer incompatibilities'):
+	for folder in ('MESS',):#, 'Beasley', 'Holmberg', 'Sobolev'):#('small', 'large'):#
 	
 	
 		dir = f'eduardo/{folder}/{sources}'#f'eduardo/Beasley/{sources}/{folder}'#
