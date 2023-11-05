@@ -14,7 +14,7 @@ GUROBI = 'GUROBI'
 CPLEX = 'CPLEX'
 CBC = 'CBC'
 
-formato = 'pdf'
+formato = 'jpg'
 
 cores = {
 	CBC:('#eeb10f', '#ff9900'),
@@ -160,7 +160,8 @@ for arq, cod, nome, fontes, incompatibilidade, qtd in [('mess.msi.cflp.log.csv',
 		t = range(len(limits))
 		
 		for s in solvers:
-			pyplot.bar(t, graf[s][1][i], width=largura, label=s, color=cores[s][0])
+			if sum(graf[s][1][i]):
+				pyplot.bar(t, graf[s][1][i], width=largura, label=s, color=cores[s][0])
 			
 			t = [x + largura for x in t]
 		pyplot.xticks([t + largura * (len(solvers) - 1)/2 for t in range(len(limits))], limits)	
