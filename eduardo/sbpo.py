@@ -4,6 +4,8 @@ rc('xtick', labelsize=18)
 rc('ytick', labelsize=18)
 rc('font', size=20)
 
+arq_graph_txt = open('sbpo.txt', 'w')
+
 LABELS = (
 	('Time', '(seconds)'),
 	('Nodes', ''),
@@ -14,7 +16,7 @@ GUROBI = 'GUROBI'
 CPLEX = 'CPLEX'
 CBC = 'CBC'
 
-formato = 'jpg'
+formato = 'pdf'
 
 cores = {
 	CBC:('#eeb10f', '#ff9900'),
@@ -41,6 +43,7 @@ for arq, cod, nome, fontes, incompatibilidade, qtd in [('mess.msi.cflp.log.csv',
 	
 	tab = []
 	print('\n',arq)
+	print(arq, '\t', cod, '\t', nome, fontes + incompatibilidade, file=arq_graph_txt)
 	for ln in csv.reader(open(arq,'r'),delimiter=';'):		
 		linha = []		
 		
@@ -129,7 +132,11 @@ for arq, cod, nome, fontes, incompatibilidade, qtd in [('mess.msi.cflp.log.csv',
 	solvers.sort(reverse=True)
 	largura = 1 / (1 + len(solvers))
 	
-	print(*solvers, '\t',*limits)
+
+	arq_graph = f'Instances {cod}.{formato}'
+	#arq_graph_txt = open(arq_graph + '.txt', 'w')
+	print('\n', *solvers, '\t', *limits, '\n', arq_graph, file=arq_graph_txt)
+	print(arq_graph, '\n', *solvers, '\t', *limits)
 	t = range(len(limits))
 	barras = []
 	legenda = []
@@ -137,10 +144,17 @@ for arq, cod, nome, fontes, incompatibilidade, qtd in [('mess.msi.cflp.log.csv',
 	#	if sum(i > k for i,k,o in graf[s][0]): 
 	#		pyplot.bar(t, [i for i,k,o in graf[s][0]], width=largura*0.6, color=cores[s][1], label=f'{s} run', hatch='//', alpha=.99)
 		if sum(k > o for i,k,o in graf[s][0]): 	
-			pyplot.bar(t, [k for i,k,o in graf[s][0]], width=largura*0.8, color=cores[s][1], label=f'{s} fact', hatch='\\', alpha=.99)
+			inst_descr = f'{s} fact'
+			fact = [k for i,k,o in graf[s][0]]
+			pyplot.bar(t, fact, width=largura*0.8, color=cores[s][1], label=inst_descr, hatch='\\', alpha=.99)
+			print(end='  ',file=arq_graph_txt)
+			print(inst_descr,*fact,sep='\n\t',file=arq_graph_txt)
 		opt = [o for i,k,o in graf[s][0]]
 		if sum(opt):
-			pyplot.bar(t, opt, width=largura, color=cores[s][0], label=f'{s} opt')						
+			inst_descr = f'{s} opt'
+			pyplot.bar(t, opt, width=largura, color=cores[s][0], label=inst_descr)						
+			print(end='  ',file=arq_graph_txt)
+			print(inst_descr,*opt,sep='\n\t',file=arq_graph_txt)
 		
 		t = [x + largura for x in t]
 	pyplot.ylabel('Instances (%)')	
@@ -149,13 +163,17 @@ for arq, cod, nome, fontes, incompatibilidade, qtd in [('mess.msi.cflp.log.csv',
 	pyplot.legend(loc='upper left', bbox_to_anchor=(1, 1))	
 	pyplot.title(f'{fontes}CFLP{incompatibilidade} {nome} instances')
 	
-	pyplot.savefig(f'Instances {cod}.{formato}', format=formato, bbox_inches='tight')	
+	pyplot.savefig(arq_graph, format=formato, bbox_inches='tight')	
 	#pyplot.show()	
 	pyplot.clf()
 	
 	for i in range(len(LABELS)):
 		label, unit = LABELS[i]
 		print('\t',label)
+
+		arq_graph = f'{label} {cod}.{formato}'		
+		#arq_graph_txt = open(arq_graph + '.txt', 'w')
+		print('\n', arq_graph, file=arq_graph_txt)
 		
 		t = range(len(limits))
 		
@@ -163,13 +181,18 @@ for arq, cod, nome, fontes, incompatibilidade, qtd in [('mess.msi.cflp.log.csv',
 			if sum(graf[s][1][i]):
 				pyplot.bar(t, graf[s][1][i], width=largura, label=s, color=cores[s][0])
 			
+				#print(s,label.lower(),'\t',*graf[s][1][i], file=arq_graph_txt)
+				print(end='\n  ', file=arq_graph_txt)
+				print(s, *graf[s][1][i], ' ', sep='\n\t', file=arq_graph_txt)
+				
+				
 			t = [x + largura for x in t]
 		pyplot.xticks([t + largura * (len(solvers) - 1)/2 for t in range(len(limits))], limits)	
 		pyplot.xlabel('Time limit (minutes)')
 		pyplot.ylabel(f'{label} {unit}')
 		pyplot.title(f'{fontes}CFLP{incompatibilidade} {nome} {label.lower()}')
 		pyplot.legend(loc='upper left', bbox_to_anchor=(1, 1))
-		pyplot.savefig(f'{label} {cod}.{formato}', format=formato, bbox_inches='tight')
+		pyplot.savefig(arq_graph, format=formato, bbox_inches='tight')
 	#	pyplot.show()
 		pyplot.clf()
 		
